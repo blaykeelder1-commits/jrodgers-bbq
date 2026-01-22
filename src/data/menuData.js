@@ -1,35 +1,56 @@
 export const menuCategories = [
   {
+    id: 'buffet',
+    name: 'BBQ Buffet All You Can Eat',
+    description: 'All-you-can-eat BBQ buffet',
+    items: [
+      {
+        id: 'buffet-lunch',
+        name: 'Lunch Buffet',
+        description: 'Buffet including BBQ ribs, smoked ribs, fried ribs, fried chicken wings, baked beans',
+        price: 18.97,
+        image: '/images/menu/combo-dinner.jpg'
+      },
+      {
+        id: 'buffet-dinner',
+        name: 'Dinner Buffet',
+        description: 'Buffet including BBQ ribs, smoked ribs, fried ribs, fried chicken wings, baked beans',
+        price: 19.96,
+        image: '/images/menu/combo-dinner.jpg'
+      }
+    ]
+  },
+  {
     id: 'lunch-specials',
     name: 'Lunch Specials',
     description: 'Monday through Friday, 11:00 AM - 3:00 PM (No Holidays)',
     items: [
       {
         id: 'ls-ribs',
-        name: 'Ribs',
+        name: 'Rib Lunch',
         description: 'Delicious cut ribs with 2 sides & bread',
-        price: 7.99,
+        price: 12.47,
         image: '/images/menu/half-slab-ribs.jpg'
       },
       {
         id: 'ls-chicken',
-        name: 'Chicken',
+        name: 'Chicken Lunch',
         description: 'Smoked chicken with 2 sides & bread',
-        price: 7.99,
+        price: 12.47,
         image: '/images/menu/pulled-pork.jpg'
       },
       {
         id: 'ls-sausage',
-        name: 'Sausage',
+        name: 'Smoked Sausage Lunch',
         description: 'Slowly smoked country links with 2 sides & bread',
-        price: 7.99,
+        price: 12.47,
         image: '/images/menu/sausage-sandwich.jpg'
       },
       {
         id: 'ls-combination',
-        name: 'Combination',
+        name: 'Combo Lunch',
         description: '3 different meats with 2 sides & bread',
-        price: 8.99,
+        price: 13.99,
         image: '/images/menu/combo-dinner.jpg'
       }
     ]
@@ -41,24 +62,31 @@ export const menuCategories = [
     items: [
       {
         id: 'ss-pork',
-        name: 'Pork on Bun',
+        name: 'Evans Pulled Pork On Bun',
         description: 'Pulled smoked pork lightly marinated with sauce',
-        price: 5.99,
+        price: 7.99,
         image: '/images/menu/pulled-pork.jpg'
       },
       {
         id: 'ss-sausage',
-        name: 'Sausage on Bun',
+        name: 'Sausage On A Bun',
         description: 'Sliced sausage lightly sauced',
-        price: 5.99,
+        price: 7.99,
         image: '/images/menu/sausage-sandwich.jpg'
       },
       {
         id: 'ss-dog',
         name: 'Smoked Dog',
         description: 'Smoked sausage on bun with sauce',
-        price: 5.99,
+        price: 7.99,
         image: '/images/menu/sausage-sandwich.jpg'
+      },
+      {
+        id: 'ss-knuckle',
+        name: 'Knuckle Sandwich',
+        description: 'Our signature knuckle sandwich',
+        price: 8.18,
+        image: '/images/menu/pulled-pork.jpg'
       },
       {
         id: 'ss-beef',
@@ -90,23 +118,23 @@ export const menuCategories = [
       },
       {
         id: 'sc-pork',
-        name: 'Pork Sandwich Combo',
+        name: 'Evans Pulled Pork Sandwich',
         description: 'With 2 sides & tea',
-        price: 8.99,
+        price: 10.49,
         image: '/images/menu/pulled-pork.jpg'
       },
       {
         id: 'sc-sausage',
         name: 'Smoked Sausage Sandwich Combo',
         description: 'With 2 sides & tea',
-        price: 8.99,
+        price: 10.49,
         image: '/images/menu/sausage-sandwich.jpg'
       },
       {
         id: 'sc-dog',
         name: 'Smoked Dog Combo',
         description: 'With 2 sides & tea',
-        price: 8.99,
+        price: 10.49,
         image: '/images/menu/sausage-sandwich.jpg'
       },
       {
@@ -120,119 +148,119 @@ export const menuCategories = [
         id: 'sc-chicken',
         name: 'Pulled Chicken Combo',
         description: 'With fries & tea',
-        price: 8.99,
+        price: 10.49,
         image: '/images/menu/pulled-pork.jpg'
       }
     ]
   },
   {
     id: 'bbq-ribs',
-    name: 'J-Rodgers Barbecue',
+    name: 'J Rodgers BBQ Dinner',
     description: 'Our famous slow-smoked ribs',
     items: [
       {
         id: 'bbq-dinner',
         name: 'Rib Dinner',
         description: 'Delicious cut ribs with 2 sides & bread',
-        price: 13.99,
+        price: 16.99,
         image: '/images/menu/half-slab-ribs.jpg'
       },
       {
         id: 'bbq-half',
         name: 'Half Slab',
         description: 'Half rack of mouth-watering pork ribs with bread',
-        price: 15.75,
+        price: 18.75,
         image: '/images/menu/half-slab-ribs.jpg'
       },
       {
         id: 'bbq-full',
-        name: 'Full Slab',
+        name: 'Slab Ribs',
         description: 'Full rack of mouth-watering pork ribs with bread',
-        price: 25.99,
+        price: 29.99,
         image: '/images/menu/half-slab-ribs.jpg'
       },
       {
         id: 'bbq-sandwich',
         name: 'Rib Sandwich',
         description: 'Small order of mouth-watering pork ribs with bread',
-        price: 10.50,
+        price: 13.50,
         image: '/images/menu/fried-ribs.jpg'
       },
       {
         id: 'bbq-combo',
         name: 'Combo Dinner',
         description: '3 different meats with 2 sides & bread',
-        price: 14.99,
+        price: 17.99,
         image: '/images/menu/combo-dinner.jpg'
       }
     ]
   },
   {
     id: 'chicken',
-    name: 'J-Rodgers Chicken',
+    name: 'Smoked Chicken',
     description: 'Tender smoked chicken',
     items: [
       {
         id: 'ch-whole',
         name: 'Whole Chicken',
         description: 'Delicious smoked chicken with bread',
-        price: 14.75,
+        price: 16.99,
         image: '/images/menu/pulled-pork.jpg'
       },
       {
         id: 'ch-half',
         name: 'Half Chicken',
         description: 'Delicious smoked chicken with bread',
-        price: 9.75,
+        price: 11.99,
         image: '/images/menu/pulled-pork.jpg'
       },
       {
         id: 'ch-dinner',
         name: 'Chicken Dinner',
         description: 'Half delicious smoked chicken with 2 sides & bread',
-        price: 13.99,
+        price: 14.99,
         image: '/images/menu/pulled-pork.jpg'
       }
     ]
   },
   {
     id: 'sausage',
-    name: 'J-Rodgers Sausage',
+    name: 'Sausage',
     description: 'Slowly smoked country links',
     items: [
       {
         id: 'sau-pound',
-        name: '1 Pound Smoked Sausage',
+        name: '1lb Sausage',
         description: 'A full pound of our smoked sausage',
-        price: 12.99,
+        price: 14.99,
         image: '/images/menu/sausage-sandwich.jpg'
       },
       {
         id: 'sau-dinner',
         name: 'Sausage Dinner',
         description: 'Smoked sausage with 2 sides & bread',
-        price: 12.99,
+        price: 16.99,
         image: '/images/menu/sausage-sandwich.jpg'
       }
     ]
   },
   {
     id: 'pork',
-    name: 'J-Rodgers Pork',
+    name: 'Evans Pulled Pork',
     description: 'Tender pulled pork',
     items: [
       {
         id: 'pork-pound',
-        name: '1 Pound Pulled Pork',
+        name: '1lb Of Pulled Pork',
         description: 'A full pound of our tender pulled pork',
-        price: 12.99,
+        price: 14.84,
         image: '/images/menu/pulled-pork.jpg'
       },
       {
         id: 'pork-dinner',
-        name: 'Pork Dinner',
+        name: 'Pulled Pork Dinner',
         description: 'Pulled pork with 2 sides & bread',
-        price: 14.99,
+        price: 15.99,
         image: '/images/menu/pulled-pork.jpg'
       }
     ]
@@ -244,86 +272,86 @@ export const menuCategories = [
     items: [
       {
         id: 'side-beans-sm',
-        name: 'Yo-Jo Beans (Small)',
-        description: 'Our famous baked beans',
-        price: 3.99,
-        image: '/images/menu/yo-jo-beans.jpg'
-      },
-      {
-        id: 'side-beans-md',
-        name: 'Yo-Jo Beans (Medium)',
+        name: 'YO - Jo Beans (Small)',
         description: 'Our famous baked beans',
         price: 4.99,
         image: '/images/menu/yo-jo-beans.jpg'
       },
       {
-        id: 'side-beans-lg',
-        name: 'Yo-Jo Beans (Large)',
+        id: 'side-beans-md',
+        name: 'YO - Jo Beans (Medium)',
         description: 'Our famous baked beans',
-        price: 7.99,
+        price: 6.99,
+        image: '/images/menu/yo-jo-beans.jpg'
+      },
+      {
+        id: 'side-beans-lg',
+        name: 'YO - Jo Beans (Large)',
+        description: 'Our famous baked beans',
+        price: 9.99,
         image: '/images/menu/yo-jo-beans.jpg'
       },
       {
         id: 'side-slaw-sm',
         name: 'Cole Slaw (Small)',
         description: 'Creamy homemade coleslaw',
-        price: 3.99,
+        price: 4.99,
         image: '/images/menu/cole-slaw.jpg'
       },
       {
         id: 'side-slaw-md',
         name: 'Cole Slaw (Medium)',
         description: 'Creamy homemade coleslaw',
-        price: 4.99,
+        price: 6.99,
         image: '/images/menu/cole-slaw.jpg'
       },
       {
         id: 'side-slaw-lg',
         name: 'Cole Slaw (Large)',
         description: 'Creamy homemade coleslaw',
-        price: 7.99,
+        price: 9.99,
         image: '/images/menu/cole-slaw.jpg'
       },
       {
         id: 'side-potato-sm',
         name: 'Potato Salad (Small)',
         description: 'Southern-style potato salad',
-        price: 3.99,
+        price: 4.99,
         image: '/images/menu/potato-salad.jpg'
       },
       {
         id: 'side-potato-md',
         name: 'Potato Salad (Medium)',
         description: 'Southern-style potato salad',
-        price: 4.99,
+        price: 6.99,
         image: '/images/menu/potato-salad.jpg'
       },
       {
         id: 'side-potato-lg',
         name: 'Potato Salad (Large)',
         description: 'Southern-style potato salad',
-        price: 7.99,
+        price: 9.99,
         image: '/images/menu/potato-salad.jpg'
       },
       {
         id: 'side-fries-sm',
-        name: 'Fries (Small)',
-        description: 'Crispy golden fries',
-        price: 3.99,
-        image: '/images/menu/fries.jpg'
-      },
-      {
-        id: 'side-fries-md',
-        name: 'Fries (Medium)',
+        name: 'French Fries (Small)',
         description: 'Crispy golden fries',
         price: 4.99,
         image: '/images/menu/fries.jpg'
       },
       {
-        id: 'side-fries-lg',
-        name: 'Fries (Large)',
+        id: 'side-fries-md',
+        name: 'French Fries (Medium)',
         description: 'Crispy golden fries',
-        price: 7.99,
+        price: 6.99,
+        image: '/images/menu/fries.jpg'
+      },
+      {
+        id: 'side-fries-lg',
+        name: 'French Fries (Large)',
+        description: 'Crispy golden fries',
+        price: 9.99,
         image: '/images/menu/fries.jpg'
       },
       {
@@ -351,7 +379,7 @@ export const menuCategories = [
   },
   {
     id: 'children',
-    name: "Children's Menu",
+    name: 'Kids Menu',
     description: 'For our little guests (12 & under)',
     items: [
       {
@@ -363,23 +391,23 @@ export const menuCategories = [
       },
       {
         id: 'kid-chicken',
-        name: 'Chicken Fries with Fries',
+        name: 'Chicken Fries With Fries',
         description: 'Crispy chicken strips with fries',
-        price: 5.75,
+        price: 7.99,
         image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&h=300&fit=crop'
       },
       {
         id: 'kid-hotdog',
-        name: 'Hot Dog with Fries',
+        name: 'Hot Dog With Fries',
         description: 'Classic hot dog with fries',
-        price: 4.74,
+        price: 6.99,
         image: 'https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&h=300&fit=crop'
       },
       {
         id: 'kid-buffet',
-        name: "Children's Buffet",
+        name: 'Children Buffet',
         description: 'All-you-can-eat buffet for kids',
-        price: 5.25,
+        price: 7.99,
         image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop'
       }
     ]
@@ -391,9 +419,9 @@ export const menuCategories = [
     items: [
       {
         id: 'family-4',
-        name: 'Family of 4 Special',
+        name: 'Family Of Four Special',
         description: '1 slab of barbecue, 1/2 chicken, 1lb smoked sausage & 2 large sides',
-        price: 53.00,
+        price: 58.99,
         image: '/images/menu/combo-dinner.jpg'
       },
       {
@@ -411,18 +439,60 @@ export const menuCategories = [
     description: 'Sweet endings to your meal',
     items: [
       {
-        id: 'dessert-banana',
-        name: 'Banana Pudding',
+        id: 'dessert-banana-sm',
+        name: 'Banana Pudding (Small)',
         description: 'Creamy homemade banana pudding',
-        price: 4.99,
+        price: 5.99,
         image: '/images/menu/banana-pudding.jpg'
       },
       {
-        id: 'dessert-peach',
-        name: 'Peach Cobbler',
+        id: 'dessert-banana-md',
+        name: 'Banana Pudding (Medium)',
+        description: 'Creamy homemade banana pudding',
+        price: 6.99,
+        image: '/images/menu/banana-pudding.jpg'
+      },
+      {
+        id: 'dessert-banana-lg',
+        name: 'Banana Pudding (Large)',
+        description: 'Creamy homemade banana pudding',
+        price: 10.99,
+        image: '/images/menu/banana-pudding.jpg'
+      },
+      {
+        id: 'dessert-peach-sm',
+        name: 'Peach Cobbler (Small)',
         description: 'Warm peach cobbler with a flaky crust',
-        price: 4.99,
+        price: 5.99,
         image: '/images/menu/peach-cobbler.jpg'
+      },
+      {
+        id: 'dessert-peach-md',
+        name: 'Peach Cobbler (Medium)',
+        description: 'Warm peach cobbler with a flaky crust',
+        price: 6.99,
+        image: '/images/menu/peach-cobbler.jpg'
+      },
+      {
+        id: 'dessert-peach-lg',
+        name: 'Peach Cobbler (Large)',
+        description: 'Warm peach cobbler with a flaky crust',
+        price: 10.99,
+        image: '/images/menu/peach-cobbler.jpg'
+      },
+      {
+        id: 'dessert-pound',
+        name: 'Pound Cake',
+        description: 'Classic homemade pound cake',
+        price: 3.99,
+        image: '/images/menu/pound-cake-slice.jpg'
+      },
+      {
+        id: 'dessert-redvelvet',
+        name: 'Red Velvet Cake',
+        description: 'Rich red velvet cake with cream cheese frosting',
+        price: 4.99,
+        image: '/images/menu/pound-cake-slice.jpg'
       },
       {
         id: 'dessert-cake',
@@ -440,16 +510,16 @@ export const menuCategories = [
     items: [
       {
         id: 'drink-soft',
-        name: 'Soft Drink',
+        name: 'Soft Drinks',
         description: 'Coke, Sprite, Dr Pepper, and more',
-        price: 2.49,
+        price: 2.99,
         image: 'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=400&h=300&fit=crop'
       },
       {
         id: 'drink-tea',
         name: 'Sweet Tea',
         description: 'Southern sweet tea (one refill)',
-        price: 1.99,
+        price: 2.99,
         image: '/images/menu/sweet-tea.jpg'
       },
       {
@@ -467,7 +537,7 @@ export const featuredItems = [
   menuCategories.find(c => c.id === 'bbq-ribs').items.find(i => i.id === 'bbq-full'),
   menuCategories.find(c => c.id === 'chicken').items.find(i => i.id === 'ch-dinner'),
   menuCategories.find(c => c.id === 'specials').items.find(i => i.id === 'family-4'),
-  menuCategories.find(c => c.id === 'desserts').items.find(i => i.id === 'dessert-banana')
+  menuCategories.find(c => c.id === 'desserts').items.find(i => i.id === 'dessert-banana-sm')
 ];
 
 export const restaurantInfo = {
