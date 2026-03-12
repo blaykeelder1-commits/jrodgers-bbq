@@ -2,9 +2,12 @@ import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import MenuCard from '../components/MenuCard';
 import { featuredItems, restaurantInfo } from '../data/menuData';
+import usePageTitle from '../hooks/usePageTitle';
 import './Home.css';
 
 function Home() {
+  usePageTitle(null);
+
   return (
     <div className="home">
       <Hero />

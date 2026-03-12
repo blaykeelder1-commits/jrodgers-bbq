@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { restaurantInfo } from '../data/menuData';
+import usePageTitle from '../hooks/usePageTitle';
 import './Catering.css';
 
+const WEB3FORMS_KEY = '9aa7860e-308f-4a26-90c7-21983d2c07e0';
+
 function Catering() {
+  usePageTitle('Catering Services');
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,17 +18,42 @@ function Catering() {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In production, this would send to a backend
-    console.log('Catering inquiry:', formData);
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `Catering Inquiry from ${formData.name}`,
+          from_name: formData.name,
+          ...formData
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError('Something went wrong. Please try again or call us directly.');
+      }
+    } catch {
+      setError('Unable to send inquiry. Please try again or call us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const cateringPackages = [
@@ -223,13 +253,13 @@ function Catering() {
                         required
                       >
                         <option value="">Select event type</option>
-                        <option value="corporate">Corporate Event</option>
-                        <option value="wedding">Wedding/Reception</option>
-                        <option value="birthday">Birthday Party</option>
-                        <option value="reunion">Family Reunion</option>
-                        <option value="graduation">Graduation</option>
-                        <option value="funeral">Funeral/Memorial</option>
-                        <option value="other">Other</option>
+                        <option value="Corporate Event">Corporate Event</option>
+                        <option value="Wedding/Reception">Wedding/Reception</option>
+                        <option value="Birthday Party">Birthday Party</option>
+                        <option value="Family Reunion">Family Reunion</option>
+                        <option value="Graduation">Graduation</option>
+                        <option value="Funeral/Memorial">Funeral/Memorial</option>
+                        <option value="Other">Other</option>
                       </select>
                     </div>
 
@@ -245,8 +275,10 @@ function Catering() {
                       ></textarea>
                     </div>
 
-                    <button type="submit" className="btn btn-primary btn-lg">
-                      Submit Inquiry
+                    {error && <p className="form-error">{error}</p>}
+
+                    <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
+                      {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
                     </button>
                   </form>
                 )}

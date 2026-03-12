@@ -2,14 +2,61 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="J Rodgers BBQ & Soul Food - Authentic Southern soul food and BBQ in Saraland, Alabama. Welcome Home." />
-    <meta name="keywords" content="BBQ, soul food, Saraland, Alabama, restaurant, ribs, chicken, catering" />
+    <meta name="description" content="J Rodgers BBQ & Soul Food - Authentic Southern soul food and BBQ in Saraland, Alabama. Slow-smoked ribs, chicken, pulled pork, and homemade sides. Welcome Home." />
+    <meta name="keywords" content="BBQ, soul food, Saraland, Alabama, restaurant, ribs, chicken, catering, pulled pork, Southern food" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="J Rodgers BBQ & Soul Food | Welcome Home" />
+    <meta property="og:description" content="Authentic Southern soul food and BBQ in Saraland, Alabama. Slow-smoked ribs, chicken, pulled pork, and homemade sides." />
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:url" content="https://jrodgersbbq.net" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="J Rodgers BBQ & Soul Food" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="J Rodgers BBQ & Soul Food | Welcome Home" />
+    <meta name="twitter:description" content="Authentic Southern soul food and BBQ in Saraland, Alabama. Slow-smoked ribs, chicken, pulled pork, and homemade sides." />
+
     <title>J Rodgers BBQ & Soul Food | Welcome Home</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Georgia&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "J Rodgers BBQ & Soul Food",
+      "description": "Authentic Southern soul food and BBQ in Saraland, Alabama",
+      "url": "https://jrodgersbbq.net",
+      "telephone": "(251) 675-3282",
+      "email": "info@jrodgersbbq.com",
+      "servesCuisine": ["BBQ", "Soul Food", "Southern"],
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "1444 Industrial Parkway",
+        "addressLocality": "Saraland",
+        "addressRegion": "AL",
+        "postalCode": "36571",
+        "addressCountry": "US"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "12:00",
+          "closes": "21:00"
+        }
+      ],
+      "hasMenu": "https://jrodgersbbq.net/menu",
+      "acceptsReservations": "False"
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>

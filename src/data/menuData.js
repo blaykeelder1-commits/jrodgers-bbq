@@ -91,7 +91,7 @@ export const menuCategories = [
       {
         id: 'ss-beef',
         name: 'Beef Sandwich',
-        description: 'Thursday\'s Only - Tender beef on a bun',
+        description: 'Thursdays Only - Tender beef on a bun',
         price: 5.99,
         image: '/images/menu/pulled-pork.jpg'
       },
@@ -112,7 +112,7 @@ export const menuCategories = [
       {
         id: 'sc-beef',
         name: 'Beef Sandwich Combo',
-        description: 'Thursday\'s Only - With 2 sides & tea',
+        description: 'Thursdays Only - With 2 sides & tea',
         price: 10.99,
         image: '/images/menu/pulled-pork.jpg'
       },
@@ -391,7 +391,7 @@ export const menuCategories = [
       },
       {
         id: 'kid-chicken',
-        name: 'Chicken Fries With Fries',
+        name: 'Chicken Strips With Fries',
         description: 'Crispy chicken strips with fries',
         price: 7.99,
         image: 'https://images.unsplash.com/photo-1562967914-608f82629710?w=400&h=300&fit=crop'
@@ -543,6 +543,7 @@ export const featuredItems = [
 export const restaurantInfo = {
   name: "J Rodgers BBQ & Soul Food",
   tagline: "Welcome Home",
+  squarePaymentLink: "https://square.link/u/zwHlLC8u",
   address: "1444 Industrial Parkway",
   city: "Saraland",
   state: "AL",

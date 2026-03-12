@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import MenuCard from '../components/MenuCard';
 import { menuCategories } from '../data/menuData';
+import usePageTitle from '../hooks/usePageTitle';
 import './Menu.css';
 
 function Menu() {
+  usePageTitle('Menu');
   const [activeCategory, setActiveCategory] = useState(menuCategories[0].id);
 
   useEffect(() => {

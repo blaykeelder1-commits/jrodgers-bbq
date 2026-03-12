@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { restaurantInfo } from '../data/menuData';
+import usePageTitle from '../hooks/usePageTitle';
 import './Order.css';
 
 function Order() {
+  usePageTitle('Order Online');
+
   const {
     items,
     orderType,
@@ -18,9 +22,10 @@ function Order() {
     clearCart
   } = useCart();
 
-  const [step, setStep] = useState(1); // 1: Cart, 2: Info, 3: Payment
+  const [step, setStep] = useState(1); // 1: Cart, 2: Info, 3: Confirmation
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
+  const [orderNumber, setOrderNumber] = useState('');
 
   const TAX_RATE = 0.10; // 10% tax
   const taxAmount = cartTotal * TAX_RATE;
@@ -60,16 +65,35 @@ function Order() {
     setCustomerInfo({ [name]: value });
   };
 
-  const handleSubmitOrder = async (e) => {
+  const handleSubmitOrder = (e) => {
     e.preventDefault();
     setIsProcessing(true);
 
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Generate order number
+    const newOrderNumber = `JR${Date.now().toString().slice(-6)}`;
+    setOrderNumber(newOrderNumber);
 
-    setIsProcessing(false);
-    setOrderComplete(true);
+    // Save order details to localStorage for reference
+    const orderDetails = {
+      orderNumber: newOrderNumber,
+      items: items.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price
+      })),
+      customerInfo,
+      pickupTime,
+      orderType,
+      subtotal: cartTotal,
+      tax: taxAmount,
+      total: orderTotal,
+      timestamp: new Date().toISOString()
+    };
+    localStorage.setItem('jrodgers-last-order', JSON.stringify(orderDetails));
+
+    // Redirect to Square payment
     clearCart();
+    window.location.href = restaurantInfo.squarePaymentLink;
   };
 
   if (orderComplete) {
@@ -83,8 +107,8 @@ function Order() {
             </svg>
           </div>
           <h1>Order Confirmed!</h1>
-          <p>Thank you for your order. We'll have it ready for you soon!</p>
-          <p className="order-id">Order #JR{Date.now().toString().slice(-6)}</p>
+          <p>Thank you for your order. Your payment has been processed through Square.</p>
+          <p className="order-id">Order #{orderNumber}</p>
           <div className="success-actions">
             <Link to="/menu" className="btn btn-primary">
               Order More
@@ -312,48 +336,26 @@ function Order() {
 
                   {step === 3 && (
                     <div className="payment-section">
-                      <h2>Payment</h2>
+                      <h2>Confirm Order</h2>
                       <form onSubmit={handleSubmitOrder} className="payment-form">
-                        <div className="form-group">
-                          <label htmlFor="cardNumber">Card Number *</label>
-                          <input
-                            type="text"
-                            id="cardNumber"
-                            placeholder="1234 5678 9012 3456"
-                            required
-                            maxLength="19"
-                          />
+                        <div className="order-review">
+                          <h3>Order Details</h3>
+                          <p><strong>Name:</strong> {customerInfo.name}</p>
+                          <p><strong>Phone:</strong> {customerInfo.phone}</p>
+                          {customerInfo.email && <p><strong>Email:</strong> {customerInfo.email}</p>}
+                          <p><strong>Pickup Time:</strong> {pickupTime}</p>
+                          <p><strong>Order Type:</strong> {orderType === 'pickup' ? 'Pickup' : 'To-Go'}</p>
                         </div>
-                        <div className="form-row">
-                          <div className="form-group">
-                            <label htmlFor="expiry">Expiration *</label>
-                            <input
-                              type="text"
-                              id="expiry"
-                              placeholder="MM/YY"
-                              required
-                              maxLength="5"
-                            />
+
+                        <div className="payment-info">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                          </svg>
+                          <div>
+                            <h4>Pay Securely with Square</h4>
+                            <p>You'll be redirected to Square's secure checkout to complete your payment.</p>
                           </div>
-                          <div className="form-group">
-                            <label htmlFor="cvv">CVV *</label>
-                            <input
-                              type="text"
-                              id="cvv"
-                              placeholder="123"
-                              required
-                              maxLength="4"
-                            />
-                          </div>
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="cardName">Name on Card *</label>
-                          <input
-                            type="text"
-                            id="cardName"
-                            placeholder="John Smith"
-                            required
-                          />
                         </div>
 
                         <div className="cart-actions">
@@ -369,17 +371,16 @@ function Order() {
                             className="btn btn-primary btn-lg"
                             disabled={isProcessing}
                           >
-                            {isProcessing ? 'Processing...' : `Pay $${orderTotal.toFixed(2)}`}
+                            {isProcessing ? 'Redirecting...' : 'Proceed to Payment'}
                           </button>
                         </div>
                       </form>
 
                       <p className="payment-notice">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72"></path>
                         </svg>
-                        Your payment information is secure and encrypted
+                        Questions? Call us at (251) 675-3282
                       </p>
                     </div>
                   )}

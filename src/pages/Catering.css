@@ -260,6 +260,13 @@
   color: var(--color-text-muted);
 }
 
+.form-error {
+  color: var(--color-error);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-md);
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
   .packages-grid {

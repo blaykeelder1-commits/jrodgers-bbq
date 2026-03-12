@@ -38,6 +38,7 @@ function Footer() {
               <Link to="/catering">Catering</Link>
               <Link to="/gallery">Gallery</Link>
               <Link to="/contact">Contact</Link>
+              <Link to="/privacy">Privacy Policy</Link>
             </nav>
           </div>
 

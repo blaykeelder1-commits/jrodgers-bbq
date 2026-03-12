@@ -1,10 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import './Gallery.css';
 
-function Gallery() {
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const galleryImages = [
+const galleryImages = [
     {
       id: 1,
       src: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=600&fit=crop',
@@ -77,19 +75,21 @@ function Gallery() {
       alt: 'Cole slaw',
       category: 'sides'
     }
-  ];
+];
+
+function Gallery() {
+  usePageTitle('Gallery');
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const openLightbox = (image) => {
     setSelectedImage(image);
-    document.body.style.overflow = 'hidden';
   };
 
-  const closeLightbox = () => {
+  const closeLightbox = useCallback(() => {
     setSelectedImage(null);
-    document.body.style.overflow = 'auto';
-  };
+  }, []);
 
-  const navigateImage = (direction) => {
+  const navigateImage = useCallback((direction) => {
     const currentIndex = galleryImages.findIndex(img => img.id === selectedImage.id);
     let newIndex;
 
@@ -100,7 +100,26 @@ function Gallery() {
     }
 
     setSelectedImage(galleryImages[newIndex]);
-  };
+  }, [selectedImage]);
+
+  // Handle body overflow and keyboard navigation
+  useEffect(() => {
+    if (selectedImage) {
+      document.body.style.overflow = 'hidden';
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navigateImage('prev');
+        if (e.key === 'ArrowRight') navigateImage('next');
+      };
+
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = 'auto';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [selectedImage, closeLightbox, navigateImage]);
 
   return (
     <div className="gallery-page">
@@ -119,6 +138,10 @@ function Gallery() {
                 key={image.id}
                 className="gallery-item"
                 onClick={() => openLightbox(image)}
+                onKeyDown={(e) => e.key === 'Enter' && openLightbox(image)}
+                tabIndex={0}
+                role="button"
+                aria-label={`View ${image.alt}`}
               >
                 <img src={image.src} alt={image.alt} loading="lazy" />
                 <div className="gallery-overlay">

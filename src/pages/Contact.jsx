@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { restaurantInfo } from '../data/menuData';
+import usePageTitle from '../hooks/usePageTitle';
 import './Contact.css';
 
+const WEB3FORMS_KEY = '9aa7860e-308f-4a26-90c7-21983d2c07e0';
+
 function Contact() {
+  usePageTitle('Contact Us');
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -10,16 +15,42 @@ function Contact() {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Contact form:', formData);
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `Contact Form: ${formData.subject}`,
+          from_name: formData.name,
+          ...formData
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError('Something went wrong. Please try again or call us directly.');
+      }
+    } catch {
+      setError('Unable to send message. Please try again or call us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const fullAddress = `${restaurantInfo.address}, ${restaurantInfo.city}, ${restaurantInfo.state} ${restaurantInfo.zip}`;
@@ -168,11 +199,11 @@ function Contact() {
                       required
                     >
                       <option value="">Select a subject</option>
-                      <option value="general">General Inquiry</option>
-                      <option value="feedback">Feedback</option>
-                      <option value="catering">Catering Question</option>
-                      <option value="order">Order Issue</option>
-                      <option value="other">Other</option>
+                      <option value="General Inquiry">General Inquiry</option>
+                      <option value="Feedback">Feedback</option>
+                      <option value="Catering Question">Catering Question</option>
+                      <option value="Order Issue">Order Issue</option>
+                      <option value="Other">Other</option>
                     </select>
                   </div>
 
@@ -188,8 +219,10 @@ function Contact() {
                     ></textarea>
                   </div>
 
-                  <button type="submit" className="btn btn-primary btn-lg">
-                    Send Message
+                  {error && <p className="form-error">{error}</p>}
+
+                  <button type="submit" className="btn btn-primary btn-lg" disabled={isSubmitting}>
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
                   </button>
                 </form>
               )}
@@ -201,7 +234,7 @@ function Contact() {
             <h2>Find Us</h2>
             <div className="map-container">
               <iframe
-                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(fullAddress)}`}
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3440.5!2d-88.0708!3d30.8526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzDCsDUxJzA5LjQiTiA4OMKwMDQnMTQuOSJX!5e0!3m2!1sen!2sus!4v1"
                 width="100%"
                 height="400"
                 style={{ border: 0 }}
