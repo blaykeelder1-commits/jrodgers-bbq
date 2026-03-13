@@ -30,28 +30,35 @@ export const menuCategories = [
         name: 'Rib Lunch',
         description: 'Delicious cut ribs with 2 sides & bread',
         price: 12.47,
-        image: '/images/menu/half-slab-ribs.jpg'
+        image: '/images/menu/half-slab-ribs.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       },
       {
         id: 'ls-chicken',
         name: 'Chicken Lunch',
         description: 'Smoked chicken with 2 sides & bread',
         price: 12.47,
-        image: '/images/menu/pulled-pork.jpg'
+        image: '/images/menu/pulled-pork.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       },
       {
         id: 'ls-sausage',
         name: 'Smoked Sausage Lunch',
         description: 'Slowly smoked country links with 2 sides & bread',
         price: 12.47,
-        image: '/images/menu/sausage-sandwich.jpg'
+        image: '/images/menu/sausage-sandwich.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       },
       {
         id: 'ls-combination',
         name: 'Combo Lunch',
         description: '3 different meats with 2 sides & bread',
         price: 13.99,
-        image: '/images/menu/combo-dinner.jpg'
+        image: '/images/menu/combo-dinner.jpg',
+        customization: {
+          sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] },
+          meats: { count: 3, options: ['Ribs', 'Smoked Chicken', 'Sausage', 'Pulled Pork'] }
+        }
       }
     ]
   },
@@ -114,28 +121,32 @@ export const menuCategories = [
         name: 'Beef Sandwich Combo',
         description: 'Thursdays Only - With 2 sides & tea',
         price: 10.99,
-        image: '/images/menu/pulled-pork.jpg'
+        image: '/images/menu/pulled-pork.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       },
       {
         id: 'sc-pork',
         name: 'Evans Pulled Pork Sandwich',
         description: 'With 2 sides & tea',
         price: 10.49,
-        image: '/images/menu/pulled-pork.jpg'
+        image: '/images/menu/pulled-pork.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       },
       {
         id: 'sc-sausage',
         name: 'Smoked Sausage Sandwich Combo',
         description: 'With 2 sides & tea',
         price: 10.49,
-        image: '/images/menu/sausage-sandwich.jpg'
+        image: '/images/menu/sausage-sandwich.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       },
       {
         id: 'sc-dog',
         name: 'Smoked Dog Combo',
         description: 'With 2 sides & tea',
         price: 10.49,
-        image: '/images/menu/sausage-sandwich.jpg'
+        image: '/images/menu/sausage-sandwich.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       },
       {
         id: 'sc-burger',
@@ -163,7 +174,8 @@ export const menuCategories = [
         name: 'Rib Dinner',
         description: 'Delicious cut ribs with 2 sides & bread',
         price: 16.99,
-        image: '/images/menu/half-slab-ribs.jpg'
+        image: '/images/menu/half-slab-ribs.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       },
       {
         id: 'bbq-half',
@@ -191,7 +203,11 @@ export const menuCategories = [
         name: 'Combo Dinner',
         description: '3 different meats with 2 sides & bread',
         price: 17.99,
-        image: '/images/menu/combo-dinner.jpg'
+        image: '/images/menu/combo-dinner.jpg',
+        customization: {
+          sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] },
+          meats: { count: 3, options: ['Ribs', 'Smoked Chicken', 'Sausage', 'Pulled Pork'] }
+        }
       }
     ]
   },
@@ -219,7 +235,8 @@ export const menuCategories = [
         name: 'Chicken Dinner',
         description: 'Half delicious smoked chicken with 2 sides & bread',
         price: 14.99,
-        image: '/images/menu/pulled-pork.jpg'
+        image: '/images/menu/pulled-pork.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       }
     ]
   },
@@ -240,7 +257,8 @@ export const menuCategories = [
         name: 'Sausage Dinner',
         description: 'Smoked sausage with 2 sides & bread',
         price: 16.99,
-        image: '/images/menu/sausage-sandwich.jpg'
+        image: '/images/menu/sausage-sandwich.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       }
     ]
   },
@@ -261,7 +279,8 @@ export const menuCategories = [
         name: 'Pulled Pork Dinner',
         description: 'Pulled pork with 2 sides & bread',
         price: 15.99,
-        image: '/images/menu/pulled-pork.jpg'
+        image: '/images/menu/pulled-pork.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       }
     ]
   },
@@ -422,7 +441,8 @@ export const menuCategories = [
         name: 'Family Of Four Special',
         description: '1 slab of barbecue, 1/2 chicken, 1lb smoked sausage & 2 large sides',
         price: 58.99,
-        image: '/images/menu/combo-dinner.jpg'
+        image: '/images/menu/combo-dinner.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       },
       {
         id: 'veggie',
@@ -534,11 +554,11 @@ export const menuCategories = [
 ];
 
 export const featuredItems = [
-  menuCategories.find(c => c.id === 'bbq-ribs').items.find(i => i.id === 'bbq-full'),
-  menuCategories.find(c => c.id === 'chicken').items.find(i => i.id === 'ch-dinner'),
-  menuCategories.find(c => c.id === 'specials').items.find(i => i.id === 'family-4'),
-  menuCategories.find(c => c.id === 'desserts').items.find(i => i.id === 'dessert-banana-sm')
-];
+  menuCategories.find(c => c.id === 'bbq-ribs')?.items.find(i => i.id === 'bbq-full'),
+  menuCategories.find(c => c.id === 'chicken')?.items.find(i => i.id === 'ch-dinner'),
+  menuCategories.find(c => c.id === 'specials')?.items.find(i => i.id === 'family-4'),
+  menuCategories.find(c => c.id === 'desserts')?.items.find(i => i.id === 'dessert-banana-sm')
+].filter(Boolean);
 
 export const restaurantInfo = {
   name: "J Rodgers BBQ & Soul Food",

@@ -1,0 +1,154 @@
+import { useState, useEffect, useRef } from 'react';
+import './CustomizeModal.css';
+
+function CustomizeModal({ item, onAdd, onClose }) {
+  const [selectedSides, setSelectedSides] = useState([]);
+  const [selectedMeats, setSelectedMeats] = useState([]);
+  const [specialInstructions, setSpecialInstructions] = useState('');
+  const overlayRef = useRef(null);
+
+  const { customization } = item;
+  const sidesConfig = customization?.sides;
+  const meatsConfig = customization?.meats;
+
+  const sidesComplete = !sidesConfig || selectedSides.length === sidesConfig.count;
+  const meatsComplete = !meatsConfig || selectedMeats.length === meatsConfig.count;
+  const canAdd = sidesComplete && meatsComplete;
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    const handleKey = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKey);
+    };
+  }, [onClose]);
+
+  const toggleSide = (side) => {
+    setSelectedSides((prev) => {
+      if (prev.includes(side)) return prev.filter((s) => s !== side);
+      if (prev.length >= sidesConfig.count) return prev;
+      return [...prev, side];
+    });
+  };
+
+  const toggleMeat = (meat) => {
+    setSelectedMeats((prev) => {
+      if (prev.includes(meat)) return prev.filter((m) => m !== meat);
+      if (prev.length >= meatsConfig.count) return prev;
+      return [...prev, meat];
+    });
+  };
+
+  const handleAdd = () => {
+    if (!canAdd) return;
+    onAdd({
+      selectedSides: sidesConfig ? selectedSides : undefined,
+      selectedMeats: meatsConfig ? selectedMeats : undefined,
+      specialInstructions: specialInstructions.trim() || undefined,
+    });
+  };
+
+  const handleOverlayClick = (e) => {
+    if (e.target === overlayRef.current) onClose();
+  };
+
+  return (
+    <div className="customize-overlay" ref={overlayRef} onClick={handleOverlayClick}>
+      <div className="customize-modal" role="dialog" aria-label={`Customize ${item.name}`}>
+        <button className="customize-close" onClick={onClose} aria-label="Close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <div className="customize-header">
+          <h2>{item.name}</h2>
+          <span className="customize-price">${item.price.toFixed(2)}</span>
+        </div>
+
+        {meatsConfig && (
+          <div className="customize-section">
+            <div className="customize-section-header">
+              <h3>Choose Your Meats</h3>
+              <span className={`customize-count ${selectedMeats.length === meatsConfig.count ? 'complete' : ''}`}>
+                {selectedMeats.length} of {meatsConfig.count} selected
+              </span>
+            </div>
+            <div className="customize-options">
+              {meatsConfig.options.map((meat) => (
+                <button
+                  key={meat}
+                  className={`customize-option ${selectedMeats.includes(meat) ? 'selected' : ''} ${selectedMeats.length >= meatsConfig.count && !selectedMeats.includes(meat) ? 'maxed' : ''}`}
+                  onClick={() => toggleMeat(meat)}
+                  type="button"
+                >
+                  {selectedMeats.includes(meat) && (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  )}
+                  {meat}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {sidesConfig && (
+          <div className="customize-section">
+            <div className="customize-section-header">
+              <h3>Choose Your Sides</h3>
+              <span className={`customize-count ${selectedSides.length === sidesConfig.count ? 'complete' : ''}`}>
+                {selectedSides.length} of {sidesConfig.count} selected
+              </span>
+            </div>
+            <div className="customize-options">
+              {sidesConfig.options.map((side) => (
+                <button
+                  key={side}
+                  className={`customize-option ${selectedSides.includes(side) ? 'selected' : ''} ${selectedSides.length >= sidesConfig.count && !selectedSides.includes(side) ? 'maxed' : ''}`}
+                  onClick={() => toggleSide(side)}
+                  type="button"
+                >
+                  {selectedSides.includes(side) && (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  )}
+                  {side}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="customize-section">
+          <h3>Special Instructions</h3>
+          <textarea
+            className="customize-instructions"
+            value={specialInstructions}
+            onChange={(e) => setSpecialInstructions(e.target.value)}
+            placeholder="Extra sauce, no onions, etc..."
+            rows="2"
+          />
+        </div>
+
+        <button
+          className="customize-add-btn"
+          onClick={handleAdd}
+          disabled={!canAdd}
+          type="button"
+        >
+          {canAdd ? 'Add to Order' : `Select your ${!meatsComplete ? 'meats' : 'sides'} to continue`}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default CustomizeModal;

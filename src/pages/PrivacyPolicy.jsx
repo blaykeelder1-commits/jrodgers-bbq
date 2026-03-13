@@ -92,7 +92,7 @@ function PrivacyPolicy() {
               <h2>Data Storage</h2>
               <p>
                 We do not store your personal information on our servers. Form submissions
-                are processed through Formspree, and payment information is handled
+                are processed through Web3Forms, and payment information is handled
                 entirely by Square. Order details may be temporarily stored in your
                 browser's local storage for your convenience during the ordering process.
               </p>

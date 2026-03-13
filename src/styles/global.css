@@ -261,3 +261,45 @@ ul, ol {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-primary);
 }
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-success);
+  color: white;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-lg);
+  z-index: 2000;
+  cursor: pointer;
+  animation: toastSlideUp 300ms ease;
+  white-space: nowrap;
+}
+
+@keyframes toastSlideUp {
+  from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+  to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .toast {
+    bottom: 70px;
+    left: var(--spacing-md);
+    right: var(--spacing-md);
+    transform: none;
+    justify-content: center;
+  }
+
+  @keyframes toastSlideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}

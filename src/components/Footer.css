@@ -102,6 +102,16 @@
   font-style: italic;
 }
 
+.footer-doordash {
+  color: var(--color-secondary-light);
+  text-decoration: none;
+  font-style: italic;
+}
+
+.footer-doordash:hover {
+  text-decoration: underline;
+}
+
 .footer-contact {
   font-style: normal;
 }

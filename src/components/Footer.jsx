@@ -48,7 +48,11 @@ function Footer() {
               <li><span>Mon - Tue:</span> <span>Closed*</span></li>
               <li><span>Wed - Sun:</span> <span>12PM - 9PM</span></li>
             </ul>
-            <p className="footer-note">*DoorDash available Mon-Tue</p>
+            <p className="footer-note">
+              *<a href="https://www.doordash.com" target="_blank" rel="noopener noreferrer" className="footer-doordash">
+                DoorDash delivery available Mon-Tue
+              </a>
+            </p>
           </div>
 
           <div className="footer-section">

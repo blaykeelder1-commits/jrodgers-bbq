@@ -143,14 +143,46 @@
   transform: rotate(-45deg) translate(7px, -6px);
 }
 
-.welcome-bar {
-  background: var(--color-primary);
-  color: var(--color-accent);
+/* Announcement Banner */
+.announcement-bar {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-accent-dark));
+  color: var(--color-primary-dark);
   text-align: center;
-  padding: var(--spacing-xs) var(--spacing-md);
-  font-family: var(--font-family-display);
-  font-style: italic;
+  padding: var(--spacing-xs) var(--spacing-xl);
   font-size: var(--font-size-sm);
+  font-weight: 500;
+  position: relative;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.announcement-text {
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.announcement-text.visible {
+  opacity: 1;
+}
+
+.announcement-dismiss {
+  position: absolute;
+  right: var(--spacing-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.announcement-dismiss:hover {
+  opacity: 1;
 }
 
 /* Mobile Styles */

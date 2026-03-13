@@ -419,6 +419,122 @@
   flex-wrap: wrap;
 }
 
+/* Closed Banner */
+.closed-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: #FFF3E0;
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.closed-banner svg {
+  flex-shrink: 0;
+  color: var(--color-warning);
+  margin-top: 2px;
+}
+
+.doordash-note a {
+  color: var(--color-secondary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Cart Item Customizations */
+.cart-item-customization {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin: 2px 0 0 0;
+}
+
+.cart-item-instructions {
+  font-style: italic;
+}
+
+/* Order Type Subtitles */
+.order-type-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.order-type-label {
+  font-weight: 600;
+}
+
+.order-type-sub {
+  font-size: var(--font-size-xs);
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+/* Form Validation */
+.input-error {
+  border-color: var(--color-error) !important;
+}
+
+.field-error {
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+  margin-top: 2px;
+}
+
+/* Checkout Error */
+.checkout-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: #FFEBEE;
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.checkout-error svg {
+  flex-shrink: 0;
+  color: var(--color-error);
+  margin-top: 2px;
+}
+
+.checkout-error p {
+  margin: var(--spacing-xs) 0 0 0;
+}
+
+.checkout-error a {
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+/* Summary Item with Customizations */
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  gap: var(--spacing-sm);
+}
+
+.summary-item-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.summary-item-custom {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
   .order-progress {

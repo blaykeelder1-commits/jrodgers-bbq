@@ -22,38 +22,72 @@ function Order() {
     clearCart
   } = useCart();
 
-  const [step, setStep] = useState(1); // 1: Cart, 2: Info, 3: Confirmation
+  const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
-  const [orderNumber, setOrderNumber] = useState('');
+  const [checkoutError, setCheckoutError] = useState(null);
+  const [touched, setTouched] = useState({});
 
-  const TAX_RATE = 0.10; // 10% tax
+  const TAX_RATE = 0.10;
   const taxAmount = cartTotal * TAX_RATE;
   const orderTotal = cartTotal + taxAmount;
+
+  // Check if restaurant is currently open
+  const getRestaurantStatus = () => {
+    const now = new Date();
+    const day = now.getDay(); // 0=Sun, 1=Mon, 2=Tue, 3=Wed...
+    const hour = now.getHours();
+    const isClosed = day === 1 || day === 2; // Mon or Tue
+    const isAfterHours = hour < 12 || hour >= 21;
+    const isDoorDashDay = isClosed;
+    return { isClosed: isClosed || isAfterHours, isDoorDashDay, isClosedDay: isClosed };
+  };
+
+  const status = getRestaurantStatus();
 
   // Generate pickup time options
   const generatePickupTimes = () => {
     const times = [];
     const now = new Date();
+    const day = now.getDay();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
 
-    // Start from next available 15-minute slot
-    let startMinute = Math.ceil(currentMinute / 15) * 15 + 30; // 30 mins from now minimum
-    let startHour = currentHour;
+    // If closed day or after hours, generate times for next open day
+    const isClosed = day === 1 || day === 2 || currentHour >= 21;
+    let targetDate = new Date(now);
 
-    if (startMinute >= 60) {
-      startMinute -= 60;
-      startHour += 1;
+    if (isClosed) {
+      // Find next open day
+      do {
+        targetDate.setDate(targetDate.getDate() + 1);
+      } while (targetDate.getDay() === 1 || targetDate.getDay() === 2);
     }
 
-    // Generate times from now until 9 PM
+    const isToday = targetDate.toDateString() === now.toDateString();
+    const dateLabel = isToday ? '' : ` (${targetDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })})`;
+
+    let startHour = 12;
+    let startMinute = 0;
+
+    if (isToday) {
+      startMinute = Math.ceil(currentMinute / 15) * 15 + 30;
+      startHour = currentHour;
+      if (startMinute >= 60) {
+        startMinute -= 60;
+        startHour += 1;
+      }
+      if (startHour < 12) {
+        startHour = 12;
+        startMinute = 0;
+      }
+    }
+
     for (let hour = startHour; hour <= 21; hour++) {
-      const minuteStart = hour === startHour ? startMinute : 0;
-      for (let minute = minuteStart; minute < 60; minute += 15) {
-        if (hour === 21 && minute > 0) break; // Stop at 9 PM
+      const mStart = hour === startHour ? startMinute : 0;
+      for (let minute = mStart; minute < 60; minute += 15) {
+        if (hour === 21 && minute > 0) break;
         const timeString = `${hour > 12 ? hour - 12 : hour}:${minute.toString().padStart(2, '0')} ${hour >= 12 ? 'PM' : 'AM'}`;
-        times.push(timeString);
+        times.push(`${timeString}${dateLabel}`);
       }
     }
 
@@ -65,21 +99,31 @@ function Order() {
     setCustomerInfo({ [name]: value });
   };
 
-  const handleSubmitOrder = (e) => {
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const isValidPhone = (phone) => {
+    const digits = phone.replace(/\D/g, '');
+    return digits.length >= 10;
+  };
+
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
+    setCheckoutError(null);
 
-    // Generate order number
     const newOrderNumber = `JR${Date.now().toString().slice(-6)}`;
-    setOrderNumber(newOrderNumber);
 
-    // Save order details to localStorage for reference
     const orderDetails = {
       orderNumber: newOrderNumber,
       items: items.map(item => ({
         name: item.name,
         quantity: item.quantity,
-        price: item.price
+        price: item.price,
+        selectedSides: item.selectedSides,
+        selectedMeats: item.selectedMeats,
+        specialInstructions: item.specialInstructions
       })),
       customerInfo,
       pickupTime,
@@ -91,36 +135,34 @@ function Order() {
     };
     localStorage.setItem('jrodgers-last-order', JSON.stringify(orderDetails));
 
-    // Redirect to Square payment
-    clearCart();
-    window.location.href = restaurantInfo.squarePaymentLink;
-  };
+    try {
+      const response = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: orderDetails.items,
+          customerInfo,
+          pickupTime,
+          orderType,
+          subtotal: cartTotal,
+          tax: taxAmount,
+          total: orderTotal
+        })
+      });
 
-  if (orderComplete) {
-    return (
-      <div className="order-page">
-        <div className="order-success">
-          <div className="success-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-              <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-          </div>
-          <h1>Order Confirmed!</h1>
-          <p>Thank you for your order. Your payment has been processed through Square.</p>
-          <p className="order-id">Order #{orderNumber}</p>
-          <div className="success-actions">
-            <Link to="/menu" className="btn btn-primary">
-              Order More
-            </Link>
-            <Link to="/" className="btn btn-outline">
-              Return Home
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+      const data = await response.json();
+
+      if (!response.ok || !data.checkoutUrl) {
+        throw new Error(data.error || 'Failed to create checkout');
+      }
+
+      window.location.href = data.checkoutUrl;
+    } catch (error) {
+      console.error('Checkout error:', error);
+      setIsProcessing(false);
+      setCheckoutError(error.message || 'Something went wrong. Please try again or call us to place your order.');
+    }
+  };
 
   return (
     <div className="order-page">
@@ -133,6 +175,28 @@ function Order() {
 
       <div className="order-container">
         <div className="container">
+          {/* Closed banner */}
+          {status.isClosed && (
+            <div className="closed-banner">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <div>
+                <strong>We're currently closed.</strong> Open Wednesday – Sunday, 12PM – 9PM.
+                Place your order now and select a pickup time!
+                {status.isDoorDashDay && (
+                  <span className="doordash-note">
+                    {' '}DoorDash delivery is available today!{' '}
+                    <a href="https://www.doordash.com" target="_blank" rel="noopener noreferrer">
+                      Order on DoorDash
+                    </a>
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
           {items.length === 0 && step === 1 ? (
             <div className="empty-cart">
               <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -185,7 +249,10 @@ function Order() {
                               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                               <polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>
-                            Pickup
+                            <div className="order-type-text">
+                              <span className="order-type-label">Pickup</span>
+                              <span className="order-type-sub">I'll grab it at the counter</span>
+                            </div>
                           </button>
                           <button
                             className={`order-type-btn ${orderType === 'to-go' ? 'active' : ''}`}
@@ -197,7 +264,10 @@ function Order() {
                               <circle cx="5.5" cy="18.5" r="2.5"></circle>
                               <circle cx="18.5" cy="18.5" r="2.5"></circle>
                             </svg>
-                            To-Go
+                            <div className="order-type-text">
+                              <span className="order-type-label">To-Go</span>
+                              <span className="order-type-sub">Package it for the road</span>
+                            </div>
                           </button>
                         </div>
                       </div>
@@ -205,24 +275,39 @@ function Order() {
                       {/* Cart Items */}
                       <div className="cart-items">
                         {items.map((item) => (
-                          <div key={item.id} className="cart-item">
+                          <div key={item.cartItemId} className="cart-item">
                             <img src={item.image} alt={item.name} />
                             <div className="cart-item-info">
                               <h4>{item.name}</h4>
+                              {item.selectedMeats && (
+                                <p className="cart-item-customization">
+                                  Meats: {item.selectedMeats.join(', ')}
+                                </p>
+                              )}
+                              {item.selectedSides && (
+                                <p className="cart-item-customization">
+                                  Sides: {item.selectedSides.join(', ')}
+                                </p>
+                              )}
+                              {item.specialInstructions && (
+                                <p className="cart-item-customization cart-item-instructions">
+                                  Note: {item.specialInstructions}
+                                </p>
+                              )}
                               <span className="cart-item-price">
                                 ${item.price.toFixed(2)}
                               </span>
                             </div>
                             <div className="cart-item-quantity">
                               <button
-                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
                                 aria-label="Decrease quantity"
                               >
                                 -
                               </button>
                               <span>{item.quantity}</span>
                               <button
-                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
                                 aria-label="Increase quantity"
                               >
                                 +
@@ -233,7 +318,7 @@ function Order() {
                             </span>
                             <button
                               className="cart-item-remove"
-                              onClick={() => removeItem(item.id)}
+                              onClick={() => removeItem(item.cartItemId)}
                               aria-label="Remove item"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -271,9 +356,14 @@ function Order() {
                             name="name"
                             value={customerInfo.name}
                             onChange={handleInputChange}
+                            onBlur={() => handleBlur('name')}
+                            className={touched.name && !customerInfo.name ? 'input-error' : ''}
                             required
                             placeholder="John Smith"
                           />
+                          {touched.name && !customerInfo.name && (
+                            <span className="field-error">Name is required</span>
+                          )}
                         </div>
                         <div className="form-group">
                           <label htmlFor="phone">Phone Number *</label>
@@ -283,9 +373,17 @@ function Order() {
                             name="phone"
                             value={customerInfo.phone}
                             onChange={handleInputChange}
+                            onBlur={() => handleBlur('phone')}
+                            className={touched.phone && (!customerInfo.phone || !isValidPhone(customerInfo.phone)) ? 'input-error' : ''}
                             required
                             placeholder="(251) 555-0123"
                           />
+                          {touched.phone && !customerInfo.phone && (
+                            <span className="field-error">Phone number is required</span>
+                          )}
+                          {touched.phone && customerInfo.phone && !isValidPhone(customerInfo.phone) && (
+                            <span className="field-error">Please enter a valid 10-digit phone number</span>
+                          )}
                         </div>
                         <div className="form-group">
                           <label htmlFor="email">Email Address</label>
@@ -304,6 +402,8 @@ function Order() {
                             id="pickupTime"
                             value={pickupTime}
                             onChange={(e) => setPickupTime(e.target.value)}
+                            onBlur={() => handleBlur('pickupTime')}
+                            className={touched.pickupTime && !pickupTime ? 'input-error' : ''}
                             required
                           >
                             <option value="">Select a time</option>
@@ -313,6 +413,9 @@ function Order() {
                               </option>
                             ))}
                           </select>
+                          {touched.pickupTime && !pickupTime && (
+                            <span className="field-error">Please select a pickup time</span>
+                          )}
                         </div>
                       </form>
 
@@ -326,7 +429,7 @@ function Order() {
                         <button
                           className="btn btn-primary"
                           onClick={() => setStep(3)}
-                          disabled={!customerInfo.name || !customerInfo.phone || !pickupTime}
+                          disabled={!customerInfo.name || !customerInfo.phone || !isValidPhone(customerInfo.phone) || !pickupTime}
                         >
                           Continue to Payment
                         </button>
@@ -358,6 +461,21 @@ function Order() {
                           </div>
                         </div>
 
+                        {checkoutError && (
+                          <div className="checkout-error">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <line x1="15" y1="9" x2="9" y2="15"></line>
+                              <line x1="9" y1="9" x2="15" y2="15"></line>
+                            </svg>
+                            <div>
+                              <strong>Unable to process payment.</strong>
+                              <p>{checkoutError}</p>
+                              <p>Please try again or call us at <a href="tel:2516753282">(251) 675-3282</a> to place your order by phone.</p>
+                            </div>
+                          </div>
+                        )}
+
                         <div className="cart-actions">
                           <button
                             type="button"
@@ -371,7 +489,7 @@ function Order() {
                             className="btn btn-primary btn-lg"
                             disabled={isProcessing}
                           >
-                            {isProcessing ? 'Redirecting...' : 'Proceed to Payment'}
+                            {isProcessing ? 'Redirecting...' : checkoutError ? 'Try Again' : 'Proceed to Payment'}
                           </button>
                         </div>
                       </form>
@@ -392,8 +510,16 @@ function Order() {
                     <h3>Order Summary</h3>
                     <div className="summary-items">
                       {items.map((item) => (
-                        <div key={item.id} className="summary-item">
-                          <span>{item.quantity}x {item.name}</span>
+                        <div key={item.cartItemId} className="summary-item">
+                          <div className="summary-item-details">
+                            <span>{item.quantity}x {item.name}</span>
+                            {item.selectedSides && (
+                              <span className="summary-item-custom">Sides: {item.selectedSides.join(', ')}</span>
+                            )}
+                            {item.selectedMeats && (
+                              <span className="summary-item-custom">Meats: {item.selectedMeats.join(', ')}</span>
+                            )}
+                          </div>
                           <span>${(item.price * item.quantity).toFixed(2)}</span>
                         </div>
                       ))}

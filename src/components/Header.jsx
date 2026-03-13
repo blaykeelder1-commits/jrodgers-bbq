@@ -1,11 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import './Header.css';
 
+const announcements = [
+  'Welcome Home — Authentic BBQ & Soul Food',
+  'Open Wed-Sun 12PM-9PM | Order Online & Skip the Wait!',
+  'Now Accepting Online Orders for Pickup',
+  'Catering Available — Let Us Feed Your Next Event!'
+];
+
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { cartCount } = useCart();
+  const [announcementIndex, setAnnouncementIndex] = useState(0);
+  const [announcementVisible, setAnnouncementVisible] = useState(true);
+  const [dismissed, setDismissed] = useState(() => {
+    return sessionStorage.getItem('jrodgers-banner-dismissed') === 'true';
+  });
+
+  useEffect(() => {
+    if (dismissed) return;
+    let timeoutId;
+    const interval = setInterval(() => {
+      setAnnouncementVisible(false);
+      timeoutId = setTimeout(() => {
+        setAnnouncementIndex((prev) => (prev + 1) % announcements.length);
+        setAnnouncementVisible(true);
+      }, 400);
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeoutId);
+    };
+  }, [dismissed]);
+
+  const dismissBanner = () => {
+    setDismissed(true);
+    sessionStorage.setItem('jrodgers-banner-dismissed', 'true');
+  };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -90,9 +123,19 @@ function Header() {
         </div>
       </div>
 
-      <div className="welcome-bar">
-        <span>Welcome Home</span>
-      </div>
+      {!dismissed && (
+        <div className="announcement-bar">
+          <span className={`announcement-text ${announcementVisible ? 'visible' : ''}`}>
+            {announcements[announcementIndex]}
+          </span>
+          <button className="announcement-dismiss" onClick={dismissBanner} aria-label="Dismiss">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      )}
     </header>
   );
 }

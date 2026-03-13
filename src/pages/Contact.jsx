@@ -126,7 +126,11 @@ function Contact() {
                       <li><span>Monday - Tuesday</span><span>Closed*</span></li>
                       <li><span>Wednesday - Sunday</span><span>12PM - 9PM</span></li>
                     </ul>
-                    <p className="contact-note">*DoorDash available Mon-Tue</p>
+                    <p className="contact-note">
+                      *<a href="https://www.doordash.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-secondary)', textDecoration: 'none' }}>
+                        DoorDash delivery available Mon-Tue
+                      </a>
+                    </p>
                   </div>
                 </div>
               </div>

@@ -130,6 +130,73 @@
   margin-bottom: var(--spacing-lg);
 }
 
+/* Reviews / Social Proof Section */
+.reviews-section {
+  background: var(--color-accent);
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.review-card {
+  background: var(--color-surface);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.review-stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: var(--spacing-md);
+}
+
+.review-text {
+  font-style: italic;
+  color: var(--color-text-light);
+  line-height: 1.7;
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-base);
+}
+
+.review-author {
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-sm);
+}
+
+.reviews-cta {
+  text-align: center;
+  margin-top: var(--spacing-xl);
+}
+
+.reviews-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-secondary);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+}
+
+.reviews-link:hover {
+  text-decoration: underline;
+}
+
+.doordash-link {
+  color: var(--color-secondary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.doordash-link:hover {
+  text-decoration: underline;
+}
+
 /* CTA Section */
 .cta-section {
   background: linear-gradient(
@@ -169,6 +236,10 @@
   }
 
   .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reviews-grid {
     grid-template-columns: 1fr;
   }
 }

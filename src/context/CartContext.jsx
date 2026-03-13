@@ -1,10 +1,10 @@
-import { createContext, useContext, useReducer, useEffect } from 'react';
+import { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 
 const CartContext = createContext();
 
 const initialState = {
   items: [],
-  orderType: 'pickup', // pickup or to-go
+  orderType: 'pickup',
   customerInfo: {
     name: '',
     phone: '',
@@ -13,11 +13,21 @@ const initialState = {
   pickupTime: ''
 };
 
+// Generate a unique key for a cart item based on its id + selections
+function generateCartItemId(item) {
+  const parts = [item.id];
+  if (item.selectedSides) parts.push('s:' + [...item.selectedSides].sort().join(','));
+  if (item.selectedMeats) parts.push('m:' + [...item.selectedMeats].sort().join(','));
+  if (item.specialInstructions) parts.push('i:' + item.specialInstructions);
+  return parts.join('|');
+}
+
 function cartReducer(state, action) {
   switch (action.type) {
     case 'ADD_ITEM': {
+      const cartItemId = generateCartItemId(action.payload);
       const existingIndex = state.items.findIndex(
-        item => item.id === action.payload.id
+        item => item.cartItemId === cartItemId
       );
 
       if (existingIndex >= 0) {
@@ -31,30 +41,30 @@ function cartReducer(state, action) {
 
       return {
         ...state,
-        items: [...state.items, { ...action.payload, quantity: 1 }]
+        items: [...state.items, { ...action.payload, cartItemId, quantity: 1 }]
       };
     }
 
     case 'REMOVE_ITEM': {
       return {
         ...state,
-        items: state.items.filter(item => item.id !== action.payload)
+        items: state.items.filter(item => item.cartItemId !== action.payload)
       };
     }
 
     case 'UPDATE_QUANTITY': {
-      const { id, quantity } = action.payload;
+      const { cartItemId, quantity } = action.payload;
       if (quantity <= 0) {
         return {
           ...state,
-          items: state.items.filter(item => item.id !== id)
+          items: state.items.filter(item => item.cartItemId !== cartItemId)
         };
       }
 
       return {
         ...state,
         items: state.items.map(item =>
-          item.id === id ? { ...item, quantity } : item
+          item.cartItemId === cartItemId ? { ...item, quantity } : item
         )
       };
     }
@@ -93,7 +103,20 @@ export function CartProvider({ children }) {
       const saved = localStorage.getItem('jrodgers-cart');
       if (saved) {
         try {
-          return JSON.parse(saved);
+          const parsed = JSON.parse(saved);
+          // Migrate old cart items that lack cartItemId
+          if (parsed.items && parsed.items.length > 0) {
+            const needsMigration = parsed.items.some(item => !item.cartItemId);
+            if (needsMigration) {
+              parsed.items = parsed.items.map(item => {
+                if (!item.cartItemId) {
+                  return { ...item, cartItemId: generateCartItemId(item) };
+                }
+                return item;
+              });
+            }
+          }
+          return parsed;
         } catch {
           return initialState;
         }
@@ -110,12 +133,12 @@ export function CartProvider({ children }) {
     dispatch({ type: 'ADD_ITEM', payload: item });
   };
 
-  const removeItem = (id) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: id });
+  const removeItem = (cartItemId) => {
+    dispatch({ type: 'REMOVE_ITEM', payload: cartItemId });
   };
 
-  const updateQuantity = (id, quantity) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
+  const updateQuantity = (cartItemId, quantity) => {
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { cartItemId, quantity } });
   };
 
   const setOrderType = (type) => {
@@ -130,9 +153,9 @@ export function CartProvider({ children }) {
     dispatch({ type: 'SET_PICKUP_TIME', payload: time });
   };
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     dispatch({ type: 'CLEAR_CART' });
-  };
+  }, []);
 
   const cartTotal = state.items.reduce(
     (total, item) => total + item.price * item.quantity,

@@ -3,78 +3,24 @@ import usePageTitle from '../hooks/usePageTitle';
 import './Gallery.css';
 
 const galleryImages = [
-    {
-      id: 1,
-      src: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=600&fit=crop',
-      alt: 'Delicious BBQ ribs',
-      category: 'food'
-    },
-    {
-      id: 2,
-      src: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=800&h=600&fit=crop',
-      alt: 'Smoked chicken',
-      category: 'food'
-    },
-    {
-      id: 3,
-      src: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=600&fit=crop',
-      alt: 'Soul food spread',
-      category: 'food'
-    },
-    {
-      id: 4,
-      src: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=800&h=600&fit=crop',
-      alt: 'BBQ combo plate',
-      category: 'food'
-    },
-    {
-      id: 5,
-      src: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&h=600&fit=crop',
-      alt: 'Pulled pork sandwich',
-      category: 'food'
-    },
-    {
-      id: 6,
-      src: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop',
-      alt: 'Family feast',
-      category: 'food'
-    },
-    {
-      id: 7,
-      src: 'https://images.unsplash.com/photo-1551782450-17144efb9c50?w=800&h=600&fit=crop',
-      alt: 'Smoked sausage',
-      category: 'food'
-    },
-    {
-      id: 8,
-      src: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=600&fit=crop',
-      alt: 'Banana pudding',
-      category: 'dessert'
-    },
-    {
-      id: 9,
-      src: 'https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=800&h=600&fit=crop',
-      alt: 'Peach cobbler',
-      category: 'dessert'
-    },
-    {
-      id: 10,
-      src: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=800&h=600&fit=crop',
-      alt: 'Golden fries',
-      category: 'sides'
-    },
-    {
-      id: 11,
-      src: 'https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=800&h=600&fit=crop',
-      alt: 'Yo-Jo Beans',
-      category: 'sides'
-    },
-    {
-      id: 12,
-      src: 'https://images.unsplash.com/photo-1625938145312-bc024a2ce06c?w=800&h=600&fit=crop',
-      alt: 'Cole slaw',
-      category: 'sides'
-    }
+  { id: 1, src: '/images/menu/half-slab-ribs.jpg', alt: 'Our famous slow-smoked half slab ribs', category: 'bbq' },
+  { id: 2, src: '/images/menu/combo-dinner.jpg', alt: 'BBQ combo dinner plate', category: 'bbq' },
+  { id: 3, src: '/images/menu/fried-ribs.jpg', alt: 'Crispy fried ribs', category: 'bbq' },
+  { id: 4, src: '/images/menu/pulled-pork.jpg', alt: 'Tender pulled pork', category: 'bbq' },
+  { id: 5, src: '/images/menu/sausage-sandwich.jpg', alt: 'Smoked sausage sandwich', category: 'bbq' },
+  { id: 6, src: '/images/menu/yo-jo-beans.jpg', alt: 'Our famous Yo-Jo Beans', category: 'sides' },
+  { id: 7, src: '/images/menu/mac-and-cheese.jpg', alt: 'Creamy mac and cheese', category: 'sides' },
+  { id: 8, src: '/images/menu/cole-slaw.jpg', alt: 'Fresh homemade cole slaw', category: 'sides' },
+  { id: 9, src: '/images/menu/potato-salad.jpg', alt: 'Southern-style potato salad', category: 'sides' },
+  { id: 10, src: '/images/menu/collard-greens.jpg', alt: 'Collard greens', category: 'sides' },
+  { id: 11, src: '/images/menu/fries.jpg', alt: 'Golden crispy fries', category: 'sides' },
+  { id: 12, src: '/images/menu/cornbread-dressing.jpg', alt: 'Cornbread dressing', category: 'sides' },
+  { id: 13, src: '/images/menu/banana-pudding.jpg', alt: 'Homemade banana pudding', category: 'desserts' },
+  { id: 14, src: '/images/menu/peach-cobbler.jpg', alt: 'Warm peach cobbler', category: 'desserts' },
+  { id: 15, src: '/images/menu/pound-cake-slice.jpg', alt: 'Homemade pound cake slice', category: 'desserts' },
+  { id: 16, src: '/images/menu/pound-cake-whole.jpg', alt: 'Whole pound cake', category: 'desserts' },
+  { id: 17, src: '/images/menu/sweet-tea.jpg', alt: 'Southern sweet tea', category: 'drinks' },
+  { id: 18, src: '/images/menu/header.jpg', alt: 'J Rodgers BBQ & Soul Food', category: 'restaurant' },
 ];
 
 function Gallery() {
@@ -102,7 +48,6 @@ function Gallery() {
     setSelectedImage(galleryImages[newIndex]);
   }, [selectedImage]);
 
-  // Handle body overflow and keyboard navigation
   useEffect(() => {
     if (selectedImage) {
       document.body.style.overflow = 'hidden';
