@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import './CustomizeModal.css';
 
-function CustomizeModal({ item, onAdd, onClose }) {
-  const [selectedSides, setSelectedSides] = useState([]);
-  const [selectedMeats, setSelectedMeats] = useState([]);
-  const [specialInstructions, setSpecialInstructions] = useState('');
+function CustomizeModal({ item, onAdd, onClose, initialSelections }) {
+  const [selectedSides, setSelectedSides] = useState(initialSelections?.selectedSides || []);
+  const [selectedMeats, setSelectedMeats] = useState(initialSelections?.selectedMeats || []);
+  const [specialInstructions, setSpecialInstructions] = useState(initialSelections?.specialInstructions || '');
   const overlayRef = useRef(null);
 
   const { customization } = item;
@@ -144,7 +144,7 @@ function CustomizeModal({ item, onAdd, onClose }) {
           disabled={!canAdd}
           type="button"
         >
-          {canAdd ? 'Add to Order' : `Select your ${!meatsComplete ? 'meats' : 'sides'} to continue`}
+          {canAdd ? (initialSelections ? 'Update Order' : 'Add to Order') : `Select your ${!meatsComplete ? 'meats' : 'sides'} to continue`}
         </button>
       </div>
     </div>

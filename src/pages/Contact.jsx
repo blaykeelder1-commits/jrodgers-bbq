@@ -3,7 +3,7 @@ import { restaurantInfo } from '../data/menuData';
 import usePageTitle from '../hooks/usePageTitle';
 import './Contact.css';
 
-const WEB3FORMS_KEY = '9aa7860e-308f-4a26-90c7-21983d2c07e0';
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY || '9aa7860e-308f-4a26-90c7-21983d2c07e0';
 
 function Contact() {
   usePageTitle('Contact Us');

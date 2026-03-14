@@ -69,6 +69,22 @@ function cartReducer(state, action) {
       };
     }
 
+    case 'UPDATE_ITEM': {
+      const { oldCartItemId, updatedItem } = action.payload;
+      const newCartItemId = generateCartItemId(updatedItem);
+      const oldItem = state.items.find(item => item.cartItemId === oldCartItemId);
+      if (!oldItem) return state;
+
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item.cartItemId === oldCartItemId
+            ? { ...item, ...updatedItem, cartItemId: newCartItemId }
+            : item
+        )
+      };
+    }
+
     case 'SET_ORDER_TYPE': {
       return { ...state, orderType: action.payload };
     }
@@ -141,6 +157,10 @@ export function CartProvider({ children }) {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { cartItemId, quantity } });
   };
 
+  const updateItem = (oldCartItemId, updatedItem) => {
+    dispatch({ type: 'UPDATE_ITEM', payload: { oldCartItemId, updatedItem } });
+  };
+
   const setOrderType = (type) => {
     dispatch({ type: 'SET_ORDER_TYPE', payload: type });
   };
@@ -172,6 +192,7 @@ export function CartProvider({ children }) {
     addItem,
     removeItem,
     updateQuantity,
+    updateItem,
     setOrderType,
     setCustomerInfo,
     setPickupTime,

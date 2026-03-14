@@ -1,9 +1,22 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { restaurantInfo } from '../data/menuData';
+import { useToast } from '../context/ToastContext';
+import { restaurantInfo, menuCategories } from '../data/menuData';
+import CustomizeModal from '../components/CustomizeModal';
 import usePageTitle from '../hooks/usePageTitle';
 import './Order.css';
+
+const MIN_ORDER_AMOUNT = 5.00;
+
+// Look up an item's customization config from menuData by id
+function getItemConfig(itemId) {
+  for (const category of menuCategories) {
+    const found = category.items.find(i => i.id === itemId);
+    if (found) return found;
+  }
+  return null;
+}
 
 function Order() {
   usePageTitle('Order Online');
@@ -14,22 +27,71 @@ function Order() {
     customerInfo,
     pickupTime,
     cartTotal,
+    addItem,
     removeItem,
     updateQuantity,
+    updateItem,
     setOrderType,
     setCustomerInfo,
     setPickupTime,
     clearCart
   } = useCart();
 
+  const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [checkoutError, setCheckoutError] = useState(null);
   const [touched, setTouched] = useState({});
+  const [editingItem, setEditingItem] = useState(null);
 
   const TAX_RATE = 0.10;
   const taxAmount = cartTotal * TAX_RATE;
   const orderTotal = cartTotal + taxAmount;
+  const belowMinimum = items.length > 0 && cartTotal < MIN_ORDER_AMOUNT;
+
+  // Load last order for "Order Again"
+  const getLastOrder = () => {
+    try {
+      const saved = localStorage.getItem('jrodgers-last-order');
+      return saved ? JSON.parse(saved) : null;
+    } catch { return null; }
+  };
+
+  const handleReorder = () => {
+    const lastOrder = getLastOrder();
+    if (!lastOrder?.items) return;
+    lastOrder.items.forEach(item => {
+      const config = getItemConfig(item.name);
+      for (let i = 0; i < item.quantity; i++) {
+        addItem({
+          id: config?.id || item.name,
+          name: item.name,
+          price: item.price,
+          image: config?.image || '/images/menu/combo-dinner.jpg',
+          selectedSides: item.selectedSides,
+          selectedMeats: item.selectedMeats,
+          specialInstructions: item.specialInstructions
+        });
+      }
+    });
+    showToast('Previous order added to cart!');
+  };
+
+  const handleEditItem = (cartItem) => {
+    const config = getItemConfig(cartItem.id);
+    if (!config?.customization) return;
+    setEditingItem({ ...cartItem, customization: config.customization });
+  };
+
+  const handleEditSave = (selections) => {
+    updateItem(editingItem.cartItemId, {
+      selectedSides: selections.selectedSides,
+      selectedMeats: selections.selectedMeats,
+      specialInstructions: selections.specialInstructions
+    });
+    setEditingItem(null);
+    showToast('Order updated!');
+  };
 
   // Check if restaurant is currently open
   const getRestaurantStatus = () => {
@@ -165,6 +227,7 @@ function Order() {
   };
 
   return (
+    <>
     <div className="order-page">
       <div className="order-header">
         <div className="container">
@@ -209,6 +272,18 @@ function Order() {
               <Link to="/menu" className="btn btn-primary btn-lg">
                 Browse Menu
               </Link>
+              {getLastOrder() && (
+                <div className="reorder-section">
+                  <p className="reorder-label">or reorder your last meal</p>
+                  <button className="btn btn-outline" onClick={handleReorder}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="23 4 23 10 17 10"></polyline>
+                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    Order Again
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div className="order-layout">
@@ -316,6 +391,18 @@ function Order() {
                             <span className="cart-item-total">
                               ${(item.price * item.quantity).toFixed(2)}
                             </span>
+                            {(item.selectedSides || item.selectedMeats) && (
+                              <button
+                                className="cart-item-edit"
+                                onClick={() => handleEditItem(item)}
+                                aria-label="Edit item"
+                              >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                              </button>
+                            )}
                             <button
                               className="cart-item-remove"
                               onClick={() => removeItem(item.cartItemId)}
@@ -330,6 +417,17 @@ function Order() {
                         ))}
                       </div>
 
+                      {belowMinimum && (
+                        <div className="minimum-order-warning">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                          </svg>
+                          Minimum order is ${MIN_ORDER_AMOUNT.toFixed(2)}. Add ${(MIN_ORDER_AMOUNT - cartTotal).toFixed(2)} more to continue.
+                        </div>
+                      )}
+
                       <div className="cart-actions">
                         <Link to="/menu" className="btn btn-outline">
                           Add More Items
@@ -337,6 +435,7 @@ function Order() {
                         <button
                           className="btn btn-primary"
                           onClick={() => setStep(2)}
+                          disabled={belowMinimum}
                         >
                           Continue to Info
                         </button>
@@ -555,6 +654,19 @@ function Order() {
         </div>
       </div>
     </div>
+    {editingItem && (
+      <CustomizeModal
+        item={editingItem}
+        onAdd={handleEditSave}
+        onClose={() => setEditingItem(null)}
+        initialSelections={{
+          selectedSides: editingItem.selectedSides,
+          selectedMeats: editingItem.selectedMeats,
+          specialInstructions: editingItem.specialInstructions
+        }}
+      />
+    )}
+    </>
   );
 }
 
