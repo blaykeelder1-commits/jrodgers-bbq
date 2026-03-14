@@ -78,8 +78,10 @@ export default async function handler(req, res) {
       checkoutOptions: {
         redirectUrl: `${process.env.SITE_URL || 'https://jrodgersbbq.net'}/order-confirmation`,
         askForShippingAddress: false,
+        merchantSupportEmail: 'info@jrodgersbbq.com',
         note
       },
+      description: 'J Rodgers BBQ & Soul Food - Online Order',
       prePopulatedData: {
         buyerEmail: customerInfo.email || undefined,
         buyerPhoneNumber: formatPhone(customerInfo.phone) || undefined
