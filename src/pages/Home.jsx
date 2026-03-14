@@ -131,8 +131,12 @@ function Home() {
                   <span>Closed*</span>
                 </li>
                 <li>
-                  <span>Wednesday - Sunday</span>
-                  <span>12PM - 9PM</span>
+                  <span>Wednesday - Saturday</span>
+                  <span>10AM - 9PM</span>
+                </li>
+                <li>
+                  <span>Sunday</span>
+                  <span>11AM - 5PM</span>
                 </li>
               </ul>
               <p className="hours-note">

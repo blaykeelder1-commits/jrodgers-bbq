@@ -5,7 +5,7 @@ import './Header.css';
 
 const announcements = [
   'Welcome Home — Authentic BBQ & Soul Food',
-  'Open Wed-Sun 12PM-9PM | Order Online & Skip the Wait!',
+  'Open Wed-Sat 10AM-9PM, Sun 11AM-5PM | Order Online & Skip the Wait!',
   'Now Accepting Online Orders for Pickup',
   'Catering Available — Let Us Feed Your Next Event!'
 ];

@@ -46,7 +46,8 @@ function Footer() {
             <h4>Hours</h4>
             <ul className="footer-hours">
               <li><span>Mon - Tue:</span> <span>Closed*</span></li>
-              <li><span>Wed - Sun:</span> <span>12PM - 9PM</span></li>
+              <li><span>Wed - Sat:</span> <span>10AM - 9PM</span></li>
+              <li><span>Sunday:</span> <span>11AM - 5PM</span></li>
             </ul>
             <p className="footer-note">
               *<a href="https://www.doordash.com" target="_blank" rel="noopener noreferrer" className="footer-doordash">

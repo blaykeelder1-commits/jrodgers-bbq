@@ -573,11 +573,11 @@ export const restaurantInfo = {
   hours: {
     monday: "Closed (DoorDash Available)",
     tuesday: "Closed (DoorDash Available)",
-    wednesday: "12:00 PM - 9:00 PM",
-    thursday: "12:00 PM - 9:00 PM",
-    friday: "12:00 PM - 9:00 PM",
-    saturday: "12:00 PM - 9:00 PM",
-    sunday: "12:00 PM - 9:00 PM"
+    wednesday: "10:00 AM - 9:00 PM",
+    thursday: "10:00 AM - 9:00 PM",
+    friday: "10:00 AM - 9:00 PM",
+    saturday: "10:00 AM - 9:00 PM",
+    sunday: "11:00 AM - 5:00 PM"
   },
   socialMedia: {
     facebook: "https://facebook.com/jrodgersbbq",

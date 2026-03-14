@@ -98,10 +98,13 @@ function Order() {
     const now = new Date();
     const day = now.getDay(); // 0=Sun, 1=Mon, 2=Tue, 3=Wed...
     const hour = now.getHours();
-    const isClosed = day === 1 || day === 2; // Mon or Tue
-    const isAfterHours = hour < 12 || hour >= 21;
-    const isDoorDashDay = isClosed;
-    return { isClosed: isClosed || isAfterHours, isDoorDashDay, isClosedDay: isClosed };
+    const isClosedDay = day === 1 || day === 2; // Mon or Tue
+    const isSunday = day === 0;
+    const openHour = isSunday ? 11 : 10;
+    const closeHour = isSunday ? 17 : 21;
+    const isAfterHours = hour < openHour || hour >= closeHour;
+    const isDoorDashDay = isClosedDay;
+    return { isClosed: isClosedDay || isAfterHours, isDoorDashDay, isClosedDay };
   };
 
   const status = getRestaurantStatus();
@@ -115,7 +118,9 @@ function Order() {
     const currentMinute = now.getMinutes();
 
     // If closed day or after hours, generate times for next open day
-    const isClosed = day === 1 || day === 2 || currentHour >= 21;
+    const isSunday = day === 0;
+    const closeHour = isSunday ? 17 : 21;
+    const isClosed = day === 1 || day === 2 || currentHour >= closeHour;
     let targetDate = new Date(now);
 
     if (isClosed) {
@@ -128,7 +133,11 @@ function Order() {
     const isToday = targetDate.toDateString() === now.toDateString();
     const dateLabel = isToday ? '' : ` (${targetDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })})`;
 
-    let startHour = 12;
+    const targetIsSunday = targetDate.getDay() === 0;
+    const targetOpenHour = targetIsSunday ? 11 : 10;
+    const targetCloseHour = targetIsSunday ? 17 : 21;
+
+    let startHour = targetOpenHour;
     let startMinute = 0;
 
     if (isToday) {
@@ -138,16 +147,16 @@ function Order() {
         startMinute -= 60;
         startHour += 1;
       }
-      if (startHour < 12) {
-        startHour = 12;
+      if (startHour < targetOpenHour) {
+        startHour = targetOpenHour;
         startMinute = 0;
       }
     }
 
-    for (let hour = startHour; hour <= 21; hour++) {
+    for (let hour = startHour; hour <= targetCloseHour; hour++) {
       const mStart = hour === startHour ? startMinute : 0;
       for (let minute = mStart; minute < 60; minute += 15) {
-        if (hour === 21 && minute > 0) break;
+        if (hour === targetCloseHour && minute > 0) break;
         const timeString = `${hour > 12 ? hour - 12 : hour}:${minute.toString().padStart(2, '0')} ${hour >= 12 ? 'PM' : 'AM'}`;
         times.push(`${timeString}${dateLabel}`);
       }
@@ -246,7 +255,7 @@ function Order() {
                 <polyline points="12 6 12 12 16 14"></polyline>
               </svg>
               <div>
-                <strong>We're currently closed.</strong> Open Wednesday – Sunday, 12PM – 9PM.
+                <strong>We're currently closed.</strong> Open Wed–Sat 10AM–9PM, Sun 11AM–5PM.
                 Place your order now and select a pickup time!
                 {status.isDoorDashDay && (
                   <span className="doordash-note">
