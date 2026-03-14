@@ -73,7 +73,14 @@ export default async function handler(req, res) {
             percentage: '10',
             scope: 'ORDER'
           }
-        ]
+        ],
+        metadata: {
+          customer_name: customerInfo.name,
+          customer_phone: customerInfo.phone,
+          customer_email: customerInfo.email || '',
+          pickup_time: pickupTime || 'ASAP',
+          order_type: orderType || 'pickup'
+        }
       },
       checkoutOptions: {
         redirectUrl: `${process.env.SITE_URL || 'https://jrodgersbbq.net'}/order-confirmation`,
