@@ -55,16 +55,18 @@
 }
 
 .hero-outline-btn {
-  background: rgba(255, 248, 225, 0.95);
-  border: 2px solid rgba(255, 248, 225, 0.95);
-  color: var(--color-primary-dark);
+  background: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  color: #3E2723;
   font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .hero-outline-btn:hover {
-  background: #FFFFFF;
-  border-color: #FFFFFF;
-  color: var(--color-primary-dark);
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: #3E2723;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .hero-scroll-indicator {
