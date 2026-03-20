@@ -550,6 +550,20 @@ export const menuCategories = [
         image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop'
       }
     ]
+  },
+  {
+    id: 'extras',
+    name: 'Extras',
+    description: 'Condiments and add-ons',
+    items: [
+      {
+        id: 'extra-mustard',
+        name: 'Mustard Packet',
+        description: 'Classic yellow mustard',
+        price: 0.10,
+        image: 'https://images.unsplash.com/photo-1528750717929-32abb73d3bd9?w=400&h=300&fit=crop'
+      }
+    ]
   }
 ];
 
