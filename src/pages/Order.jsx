@@ -141,7 +141,7 @@ function Order() {
     let startMinute = 0;
 
     if (isToday) {
-      startMinute = Math.ceil(currentMinute / 15) * 15 + 30;
+      startMinute = Math.ceil(currentMinute / 15) * 15 + 45;
       startHour = currentHour;
       if (startMinute >= 60) {
         startMinute -= 60;

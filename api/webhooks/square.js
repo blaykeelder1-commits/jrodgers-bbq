@@ -1,5 +1,5 @@
 /**
- * Square webhook handler — triggered on payment.completed events.
+ * Square webhook handler — triggered on payment.updated events.
  * Orchestrates: fetch order → email customer + restaurant → push to Epos Now.
  */
 import { createHmac } from 'crypto';
@@ -36,13 +36,18 @@ export default async function handler(req, res) {
       console.warn('[webhook] SQUARE_WEBHOOK_SIGNATURE_KEY not set — skipping verification');
     }
 
-    // Only handle payment.completed events
-    if (body.type !== 'payment.completed') {
+    // Only handle payment.updated events (Square sends this when payment completes)
+    if (body.type !== 'payment.updated') {
       return res.status(200).json({ ok: true, skipped: body.type });
     }
 
+    // Ensure the payment actually completed (not just any status update)
     const payment = body.data?.object?.payment;
-    if (!payment?.orderId) {
+    if (!payment || payment.status !== 'COMPLETED') {
+      return res.status(200).json({ ok: true, skipped: 'not completed' });
+    }
+
+    if (!payment.orderId) {
       console.error('[webhook] No orderId in payment event');
       return res.status(200).json({ ok: true, error: 'no orderId' });
     }

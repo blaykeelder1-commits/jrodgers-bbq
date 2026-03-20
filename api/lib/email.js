@@ -9,13 +9,13 @@ const FROM_ADDRESS = process.env.RESEND_DOMAIN_VERIFIED === 'true'
   : 'J Rodgers BBQ <onboarding@resend.dev>';
 
 /**
- * Ensure pickup time is at least 30 minutes from now.
- * If the customer selected a specific time, push it out if it's less than 30 min away.
- * If ASAP or empty, set to 30 minutes from now.
+ * Ensure pickup time is at least 45 minutes from now.
+ * If the customer selected a specific time, push it out if it's less than 45 min away.
+ * If ASAP or empty, set to 45 minutes from now.
  */
 function resolvePickupTime(pickupTime) {
   const now = new Date();
-  const thirtyOut = new Date(now.getTime() + 30 * 60 * 1000);
+  const fortyFiveOut = new Date(now.getTime() + 45 * 60 * 1000);
 
   // Format a Date to readable time like "4:30 PM"
   const formatTime = (d) => d.toLocaleTimeString('en-US', {
@@ -25,17 +25,17 @@ function resolvePickupTime(pickupTime) {
     timeZone: 'America/Chicago'
   });
 
-  // If ASAP or not provided, default to 30 min out
+  // If ASAP or not provided, default to 45 min out
   if (!pickupTime || pickupTime.toLowerCase() === 'asap') {
-    return formatTime(thirtyOut);
+    return formatTime(fortyFiveOut);
   }
 
-  // Try to parse the provided time and ensure it's at least 30 min out
+  // Try to parse the provided time and ensure it's at least 45 min out
   try {
     const today = now.toISOString().split('T')[0];
     const parsed = new Date(`${today}T${to24Hour(pickupTime)}`);
-    if (!isNaN(parsed.getTime()) && parsed < thirtyOut) {
-      return formatTime(thirtyOut);
+    if (!isNaN(parsed.getTime()) && parsed < fortyFiveOut) {
+      return formatTime(fortyFiveOut);
     }
   } catch {
     // Can't parse — just return the original
@@ -67,7 +67,7 @@ export async function sendOrderEmails({ customerName, customerPhone, customerEma
     return { customer: null, restaurant: null };
   }
 
-  // Ensure pickup is at least 30 min out
+  // Ensure pickup is at least 45 min out
   const resolvedPickup = resolvePickupTime(pickupTime);
 
   const itemRows = lineItems
