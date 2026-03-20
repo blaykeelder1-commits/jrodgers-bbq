@@ -7,7 +7,7 @@ import CustomizeModal from '../components/CustomizeModal';
 import usePageTitle from '../hooks/usePageTitle';
 import './Order.css';
 
-const MIN_ORDER_AMOUNT = 0.01;
+const MIN_ORDER_AMOUNT = 5.00;
 
 // Look up an item's customization config from menuData by id
 function getItemConfig(itemId) {
