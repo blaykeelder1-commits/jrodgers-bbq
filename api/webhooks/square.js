@@ -47,12 +47,13 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, skipped: 'not completed' });
     }
 
-    if (!payment.orderId) {
+    const orderId = payment.order_id || payment.orderId;
+    if (!orderId) {
       console.error('[webhook] No orderId in payment event');
       return res.status(200).json({ ok: true, error: 'no orderId' });
     }
 
-    console.log(`[webhook] Processing payment ${payment.id} for order ${payment.orderId}`);
+    console.log(`[webhook] Processing payment ${payment.id} for order ${orderId}`);
 
     // Fetch full order from Square
     const { SquareClient, SquareEnvironment } = await import('square');
@@ -62,12 +63,12 @@ export default async function handler(req, res) {
     });
 
     const orderResponse = await client.orders.get({
-      orderId: payment.orderId
+      orderId
     });
     const order = orderResponse.order;
 
     if (!order) {
-      console.error('[webhook] Order not found:', payment.orderId);
+      console.error('[webhook] Order not found:', orderId);
       return res.status(200).json({ ok: true, error: 'order not found' });
     }
 
