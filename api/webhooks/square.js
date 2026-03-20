@@ -72,6 +72,28 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, error: 'order not found' });
     }
 
+    // Idempotency: skip if we already processed this order
+    if (order.metadata?.emails_sent === 'true') {
+      console.log(`[webhook] Already processed order ${orderId} — skipping`);
+      return res.status(200).json({ ok: true, skipped: 'already processed' });
+    }
+
+    // Mark order as processed to prevent duplicate emails
+    try {
+      await client.orders.update({
+        orderId,
+        order: {
+          locationId: process.env.SQUARE_LOCATION_ID,
+          metadata: { ...order.metadata, emails_sent: 'true' },
+          version: order.version
+        }
+      });
+    } catch (updateErr) {
+      // If update fails due to version conflict, another instance already processed it
+      console.warn('[webhook] Order update conflict — likely already processed:', updateErr.message);
+      return res.status(200).json({ ok: true, skipped: 'concurrent processing' });
+    }
+
     // Extract customer info from metadata (preferred) or parse from note
     const customerInfo = extractCustomerInfo(order);
 
