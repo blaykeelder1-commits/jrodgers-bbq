@@ -32,8 +32,11 @@ export default async function handler(req, res) {
         console.error('[webhook] Invalid signature');
         return res.status(401).json({ error: 'Invalid signature' });
       }
+    } else if (process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production') {
+      console.error('[webhook] SQUARE_WEBHOOK_SIGNATURE_KEY not set in production — rejecting');
+      return res.status(401).json({ error: 'Webhook verification not configured' });
     } else {
-      console.warn('[webhook] SQUARE_WEBHOOK_SIGNATURE_KEY not set — skipping verification');
+      console.warn('[webhook] SQUARE_WEBHOOK_SIGNATURE_KEY not set — skipping verification (dev)');
     }
 
     // Only handle payment.updated events (Square sends this when payment completes)
