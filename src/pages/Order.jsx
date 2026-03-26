@@ -198,6 +198,7 @@ function Order() {
       orderNumber: newOrderNumber,
       items: items.map(item => ({
         name: item.name,
+        itemId: item.id,
         quantity: item.quantity,
         price: item.price,
         selectedSides: item.selectedSides,

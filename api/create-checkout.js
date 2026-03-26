@@ -53,6 +53,12 @@ export default async function handler(req, res) {
       };
     });
 
+    // Build item ID map for EPOS integration (item index -> { itemId, selectedSize })
+    const itemIdMap = items.map(item => ({
+      itemId: item.itemId || null,
+      selectedSize: item.selectedSize || null
+    }));
+
     // Build note with customer/pickup details
     const note = [
       `Customer: ${customerInfo.name}`,
@@ -79,7 +85,8 @@ export default async function handler(req, res) {
           customer_phone: customerInfo.phone,
           customer_email: customerInfo.email || '',
           pickup_time: pickupTime || 'ASAP',
-          order_type: orderType || 'pickup'
+          order_type: orderType || 'pickup',
+          item_ids: JSON.stringify(itemIdMap)
         }
       },
       checkoutOptions: {

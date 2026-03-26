@@ -100,12 +100,22 @@ export default async function handler(req, res) {
     // Extract customer info from metadata (preferred) or parse from note
     const customerInfo = extractCustomerInfo(order);
 
+    // Parse item ID mapping from metadata (for EPOS product resolution)
+    let itemIdMap = [];
+    try {
+      if (order.metadata?.item_ids) {
+        itemIdMap = JSON.parse(order.metadata.item_ids);
+      }
+    } catch { /* ignore parse errors */ }
+
     // Build line items for email/POS
-    const lineItems = (order.lineItems || []).map(li => ({
+    const lineItems = (order.lineItems || []).map((li, index) => ({
       name: li.name,
       quantity: Number(li.quantity),
       unitPriceCents: Number(li.basePriceMoney?.amount || 0),
-      total: `$${(Number(li.totalMoney?.amount || 0) / 100).toFixed(2)}`
+      total: `$${(Number(li.totalMoney?.amount || 0) / 100).toFixed(2)}`,
+      itemId: itemIdMap[index]?.itemId || null,
+      selectedSize: itemIdMap[index]?.selectedSize || null
     }));
 
     const totalCents = Number(order.totalMoney?.amount || 0);
