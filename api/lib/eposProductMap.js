@@ -68,8 +68,8 @@ export const eposProductMap = {
   'drink-coffee': null,     // No EPOS match (no coffee product in EPOS)
 
   // === Sauces ===
-  'sauce-bk':      null, // No EPOS match (BK BBQ Sauce)
-  'sauce-regular': null, // No EPOS match (BBQ Sauce)
+  'sauce-bk':      39332879, // BK BBQ Sauce — $0.01
+  'sauce-regular': 39332880, // BBQ Sauce — $0.01
 };
 
 // Sized items: website menu item ID -> { size label: EPOS Product ID }
