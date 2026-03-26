@@ -1,4 +1,7 @@
 {
+  "crons": [
+    { "path": "/api/cron/push-orders", "schedule": "*/5 * * * *" }
+  ],
   "redirects": [
     {
       "source": "/:path((?!api/).*)",
