@@ -5,7 +5,7 @@
 import { eposProductMap, eposSizedProductMap } from './eposProductMap.js';
 
 // EPOS Now constants
-const DEVICE_ID = 127821;   // "API" device
+const DEVICE_ID = 100304;   // "RESTAURANT" device (has kitchen printer connected)
 const STAFF_ID = 206697;    // "Manager"
 const TENDER_TYPE_ID = 130092; // "Pay By Link"
 
