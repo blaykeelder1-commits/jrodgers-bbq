@@ -82,10 +82,14 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
     transactionItems[0].Notes = orderNote;
   }
 
+  // Send Central Time (Alabama) so EPOS receipt shows correct local time
+  const ctNow = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' });
+  const ctDate = new Date(ctNow).toISOString().replace('Z', '');
+
   const transaction = {
     DeviceId: DEVICE_ID,
     StaffId: STAFF_ID,
-    DateTime: new Date().toISOString(),
+    DateTime: ctDate,
     StatusId: 1, // Completed
     ServiceType: 1, // Takeaway (both pickup and to-go are takeaway)
     TotalAmount: totalCents / 100,
