@@ -132,56 +132,17 @@ export default async function handler(req, res) {
     const totalCents = Number(order.totalMoney?.amount || 0);
     const totalDisplay = `$${(totalCents / 100).toFixed(2)}`;
 
-    // Determine whether to push to EPOS now or delay until closer to pickup
-    const pickupDate = parsePickupTime(customerInfo.pickupTime);
-    const now = new Date();
-    const ONE_HOUR_MS = 60 * 60 * 1000;
-    const THIRTY_MIN_MS = 30 * 60 * 1000;
-    const shouldDelay = pickupDate && (pickupDate.getTime() - now.getTime() > ONE_HOUR_MS);
-
-    let emailPromise = sendOrderEmails({
-      customerName: customerInfo.name,
-      customerPhone: customerInfo.phone,
-      customerEmail: customerInfo.email,
-      pickupTime: customerInfo.pickupTime,
-      orderType: customerInfo.orderType,
-      lineItems,
-      totalDisplay
-    });
-
-    if (shouldDelay) {
-      // Pickup is more than 1 hour away — save epos_push_at and defer the push
-      const eposPushAt = new Date(pickupDate.getTime() - THIRTY_MIN_MS).toISOString();
-      console.log(`[webhook] Pickup at ${pickupDate.toISOString()}, deferring EPOS push until ${eposPushAt}`);
-
-      // Re-fetch order to get latest version after the emails_sent update
-      const freshOrder = (await client.orders.get({ orderId })).order;
-      await client.orders.update({
-        orderId,
-        order: {
-          locationId: process.env.SQUARE_LOCATION_ID,
-          metadata: {
-            ...freshOrder.metadata,
-            epos_push_at: eposPushAt,
-            epos_sent: 'false'
-          },
-          version: freshOrder.version
-        }
-      });
-
-      const emailResult = await emailPromise.then(
-        v => ({ status: 'fulfilled', value: v }),
-        e => ({ status: 'rejected', reason: e })
-      );
-      console.log('[webhook] Email result:', emailResult.status, emailResult.status === 'fulfilled' ? JSON.stringify(emailResult.value) : emailResult.reason?.message);
-      console.log('[webhook] POS result: deferred until', eposPushAt);
-
-      return res.status(200).json({ ok: true, eposDeferred: eposPushAt });
-    }
-
-    // Pickup within 1 hour (or unparseable) — push to EPOS immediately
+    // Fan out: email + POS push in parallel (always push immediately)
     const [emailResult, posResult] = await Promise.allSettled([
-      emailPromise,
+      sendOrderEmails({
+        customerName: customerInfo.name,
+        customerPhone: customerInfo.phone,
+        customerEmail: customerInfo.email,
+        pickupTime: customerInfo.pickupTime,
+        orderType: customerInfo.orderType,
+        lineItems,
+        totalDisplay
+      }),
       pushToEposNow({
         customerName: customerInfo.name,
         pickupTime: customerInfo.pickupTime,
@@ -193,21 +154,6 @@ export default async function handler(req, res) {
 
     console.log('[webhook] Email result:', emailResult.status, emailResult.status === 'fulfilled' ? JSON.stringify(emailResult.value) : emailResult.reason?.message);
     console.log('[webhook] POS result:', posResult.status, posResult.status === 'fulfilled' ? JSON.stringify(posResult.value) : posResult.reason?.message);
-
-    // Mark epos_sent so the cron job doesn't re-push
-    try {
-      const freshOrder = (await client.orders.get({ orderId })).order;
-      await client.orders.update({
-        orderId,
-        order: {
-          locationId: process.env.SQUARE_LOCATION_ID,
-          metadata: { ...freshOrder.metadata, epos_sent: 'true' },
-          version: freshOrder.version
-        }
-      });
-    } catch (markErr) {
-      console.warn('[webhook] Could not mark epos_sent:', markErr.message);
-    }
 
     return res.status(200).json({ ok: true });
   } catch (err) {
