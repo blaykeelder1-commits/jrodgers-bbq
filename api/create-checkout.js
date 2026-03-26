@@ -53,11 +53,21 @@ export default async function handler(req, res) {
       };
     });
 
-    // Build item ID map for EPOS integration (item index -> { itemId, selectedSize })
-    const itemIdMap = items.map(item => ({
-      itemId: item.itemId || null,
-      selectedSize: item.selectedSize || null
-    }));
+    // Build compact item ID string for EPOS integration
+    // Format: "itemId:size,itemId:size,..." — fits within Square's 60-char metadata limit
+    // Split across multiple metadata keys if needed (item_ids_0, item_ids_1, etc.)
+    const itemIdParts = items.map(item => {
+      const id = item.itemId || '?';
+      const size = item.selectedSize ? `:${item.selectedSize[0]}` : '';
+      return `${id}${size}`;
+    });
+    const itemIdStr = itemIdParts.join(',');
+    // Split into 60-char chunks for Square metadata
+    const itemIdChunks = {};
+    for (let i = 0; i < itemIdStr.length; i += 55) {
+      const chunkIndex = Math.floor(i / 55);
+      itemIdChunks[`item_ids_${chunkIndex}`] = itemIdStr.substring(i, i + 55);
+    }
 
     // Build note with customer/pickup details
     const note = [
@@ -86,7 +96,7 @@ export default async function handler(req, res) {
           customer_email: customerInfo.email || '',
           pickup_time: pickupTime || 'ASAP',
           order_type: orderType || 'pickup',
-          item_ids: JSON.stringify(itemIdMap)
+          ...itemIdChunks
         }
       },
       checkoutOptions: {

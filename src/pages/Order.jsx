@@ -61,7 +61,7 @@ function Order() {
     const lastOrder = getLastOrder();
     if (!lastOrder?.items) return;
     lastOrder.items.forEach(item => {
-      const config = getItemConfig(item.name);
+      const config = getItemConfig(item.itemId || item.name);
       for (let i = 0; i < item.quantity; i++) {
         addItem({
           id: config?.id || item.name,

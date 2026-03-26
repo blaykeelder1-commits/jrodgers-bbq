@@ -87,7 +87,7 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
     StaffId: STAFF_ID,
     DateTime: new Date().toISOString(),
     StatusId: 1, // Completed
-    ServiceType: orderType === 'to-go' ? 1 : 1, // Takeaway for both pickup and to-go
+    ServiceType: 1, // Takeaway (both pickup and to-go are takeaway)
     TotalAmount: totalCents / 100,
     TransactionItems: transactionItems,
     Tenders: [

@@ -101,10 +101,21 @@ export default async function handler(req, res) {
     const customerInfo = extractCustomerInfo(order);
 
     // Parse item ID mapping from metadata (for EPOS product resolution)
-    let itemIdMap = [];
+    // Format: compact string "itemId:S,itemId,itemId:M" split across item_ids_0, item_ids_1, etc.
+    const sizeMap = { 'S': 'Small', 'M': 'Medium', 'L': 'Large' };
+    let parsedItemIds = [];
     try {
-      if (order.metadata?.item_ids) {
-        itemIdMap = JSON.parse(order.metadata.item_ids);
+      let itemIdStr = '';
+      for (let i = 0; ; i++) {
+        const chunk = order.metadata?.[`item_ids_${i}`];
+        if (!chunk) break;
+        itemIdStr += chunk;
+      }
+      if (itemIdStr) {
+        parsedItemIds = itemIdStr.split(',').map(part => {
+          const [id, sizeChar] = part.split(':');
+          return { itemId: id === '?' ? null : id, selectedSize: sizeMap[sizeChar] || null };
+        });
       }
     } catch { /* ignore parse errors */ }
 
@@ -114,8 +125,8 @@ export default async function handler(req, res) {
       quantity: Number(li.quantity),
       unitPriceCents: Number(li.basePriceMoney?.amount || 0),
       total: `$${(Number(li.totalMoney?.amount || 0) / 100).toFixed(2)}`,
-      itemId: itemIdMap[index]?.itemId || null,
-      selectedSize: itemIdMap[index]?.selectedSize || null
+      itemId: parsedItemIds[index]?.itemId || null,
+      selectedSize: parsedItemIds[index]?.selectedSize || null
     }));
 
     const totalCents = Number(order.totalMoney?.amount || 0);
