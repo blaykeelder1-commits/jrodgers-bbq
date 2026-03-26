@@ -472,6 +472,27 @@ export const menuCategories = [
     ]
   },
   {
+    id: 'sauces',
+    name: 'BBQ Sauce',
+    description: 'Take home our signature sauces',
+    items: [
+      {
+        id: 'sauce-bk',
+        name: 'BK BBQ Sauce',
+        description: 'Our signature BK BBQ sauce',
+        price: 0.01,
+        image: '/images/menu/combo-dinner.jpg'
+      },
+      {
+        id: 'sauce-regular',
+        name: 'BBQ Sauce',
+        description: 'Classic BBQ sauce',
+        price: 0.01,
+        image: '/images/menu/combo-dinner.jpg'
+      }
+    ]
+  },
+  {
     id: 'drinks',
     name: 'Drinks',
     description: 'Refreshing beverages',
