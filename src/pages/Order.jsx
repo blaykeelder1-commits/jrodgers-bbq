@@ -84,9 +84,17 @@ function Order() {
   };
 
   const handleEditSave = (selections) => {
+    const price = selections.sizePrice || editingItem.price;
+    const baseName = editingItem.name.replace(/\s*\((?:Small|Medium|Large)\)$/, '');
+    const name = selections.selectedSize
+      ? `${baseName} (${selections.selectedSize})`
+      : baseName;
     updateItem(editingItem.cartItemId, {
+      name,
+      price,
       selectedSides: selections.selectedSides,
       selectedMeats: selections.selectedMeats,
+      selectedSize: selections.selectedSize,
       specialInstructions: selections.specialInstructions
     });
     setEditingItem(null);
@@ -194,6 +202,7 @@ function Order() {
         price: item.price,
         selectedSides: item.selectedSides,
         selectedMeats: item.selectedMeats,
+        selectedSize: item.selectedSize,
         specialInstructions: item.specialInstructions
       })),
       customerInfo,
@@ -400,7 +409,7 @@ function Order() {
                             <span className="cart-item-total">
                               ${(item.price * item.quantity).toFixed(2)}
                             </span>
-                            {(item.selectedSides || item.selectedMeats) && (
+                            {(item.selectedSides || item.selectedMeats || item.selectedSize) && (
                               <button
                                 className="cart-item-edit"
                                 onClick={() => handleEditItem(item)}
@@ -671,6 +680,7 @@ function Order() {
         initialSelections={{
           selectedSides: editingItem.selectedSides,
           selectedMeats: editingItem.selectedMeats,
+          selectedSize: editingItem.selectedSize,
           specialInstructions: editingItem.specialInstructions
         }}
       />

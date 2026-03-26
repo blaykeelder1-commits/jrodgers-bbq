@@ -16,6 +16,7 @@ const initialState = {
 // Generate a unique key for a cart item based on its id + selections
 function generateCartItemId(item) {
   const parts = [item.id];
+  if (item.selectedSize) parts.push('sz:' + item.selectedSize);
   if (item.selectedSides) parts.push('s:' + [...item.selectedSides].sort().join(','));
   if (item.selectedMeats) parts.push('m:' + [...item.selectedMeats].sort().join(','));
   if (item.specialInstructions) parts.push('i:' + item.specialInstructions);

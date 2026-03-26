@@ -9,8 +9,11 @@ function MenuCard({ item, showAddButton = true }) {
   const { showToast } = useToast();
   const [showCustomize, setShowCustomize] = useState(false);
 
+  const hasSize = !!item.customization?.size;
+  const hasCustomization = !!item.customization;
+
   const handleAddToCart = () => {
-    if (item.customization) {
+    if (hasCustomization) {
       setShowCustomize(true);
     } else {
       addItem({
@@ -24,15 +27,22 @@ function MenuCard({ item, showAddButton = true }) {
   };
 
   const handleCustomizeAdd = (selections) => {
+    const price = selections.sizePrice || item.price;
+    const name = selections.selectedSize
+      ? `${item.name} (${selections.selectedSize})`
+      : item.name;
     addItem({
       id: item.id,
-      name: item.name,
-      price: item.price,
+      name,
+      price,
       image: item.image,
-      ...selections
+      selectedSides: selections.selectedSides,
+      selectedMeats: selections.selectedMeats,
+      selectedSize: selections.selectedSize,
+      specialInstructions: selections.specialInstructions
     });
     setShowCustomize(false);
-    showToast(`${item.name} added to cart!`);
+    showToast(`${name} added to cart!`);
   };
 
   return (
@@ -44,7 +54,9 @@ function MenuCard({ item, showAddButton = true }) {
         <div className="menu-card-content">
           <div className="menu-card-header">
             <h3 className="menu-card-name">{item.name}</h3>
-            <span className="menu-card-price">${item.price.toFixed(2)}</span>
+            <span className="menu-card-price">
+              {hasSize ? `From $${item.price.toFixed(2)}` : `$${item.price.toFixed(2)}`}
+            </span>
           </div>
           <p className="menu-card-description">{item.description}</p>
           {showAddButton && (
@@ -53,7 +65,7 @@ function MenuCard({ item, showAddButton = true }) {
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              {item.customization ? 'Customize & Add' : 'Add to Order'}
+              {hasCustomization ? 'Customize & Add' : 'Add to Order'}
             </button>
           )}
         </div>

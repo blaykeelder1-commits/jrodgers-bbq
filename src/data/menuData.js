@@ -2,27 +2,34 @@ export const menuCategories = [
   {
     id: 'buffet',
     name: 'BBQ Buffet',
-    description: 'Friday, Saturday & Sunday',
+    description: 'All-you-can-eat BBQ',
     items: [
       {
-        id: 'buffet-main',
-        name: 'Buffet (Until 2PM)',
+        id: 'buffet-special',
+        name: 'Buffet Special (Wed & Thu)',
+        description: 'All-you-can-eat BBQ buffet including ribs, smoked meats, chicken & sides',
+        price: 19.99,
+        image: '/images/menu/combo-dinner.jpg'
+      },
+      {
+        id: 'buffet-weekend',
+        name: 'Buffet (Fri/Sat/Sun, Until 2PM)',
         description: 'All-you-can-eat BBQ buffet including ribs, smoked meats, chicken & sides',
         price: 20.99,
         image: '/images/menu/combo-dinner.jpg'
       },
       {
         id: 'buffet-ayce',
-        name: 'All You Can Eat Ribs (After 2PM)',
-        description: 'All-you-can-eat ribs',
-        price: 35.00,
+        name: 'All You Can Eat (After 2PM)',
+        description: 'All-you-can-eat ribs after 2PM',
+        price: 24.99,
         image: '/images/menu/combo-dinner.jpg'
       },
       {
         id: 'buffet-ayce-premium',
         name: 'All You Can Eat Wet/Dry Ribs & 2 Sides (After 2PM)',
-        description: 'All-you-can-eat wet & dry ribs with 2 sides',
-        price: 35.99,
+        description: 'All-you-can-eat wet & dry ribs with 2 sides after 2PM',
+        price: 26.99,
         image: '/images/menu/combo-dinner.jpg',
         customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
       }
@@ -273,109 +280,84 @@ export const menuCategories = [
     description: 'Homemade sides to complete your meal',
     items: [
       {
-        id: 'side-beans-sm',
-        name: 'YO - Jo Beans (Small)',
+        id: 'side-beans',
+        name: 'YO - Jo Beans',
         description: 'Our famous baked beans',
         price: 4.99,
-        image: '/images/menu/yo-jo-beans.jpg'
+        image: '/images/menu/yo-jo-beans.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 4.99 },
+              { label: 'Medium', price: 6.99 },
+              { label: 'Large', price: 9.99 }
+            ]
+          }
+        }
       },
       {
-        id: 'side-beans-md',
-        name: 'YO - Jo Beans (Medium)',
-        description: 'Our famous baked beans',
-        price: 6.99,
-        image: '/images/menu/yo-jo-beans.jpg'
-      },
-      {
-        id: 'side-beans-lg',
-        name: 'YO - Jo Beans (Large)',
-        description: 'Our famous baked beans',
-        price: 9.99,
-        image: '/images/menu/yo-jo-beans.jpg'
-      },
-      {
-        id: 'side-slaw-sm',
-        name: 'Cole Slaw (Small)',
+        id: 'side-slaw',
+        name: 'Cole Slaw',
         description: 'Creamy homemade coleslaw',
         price: 4.99,
-        image: '/images/menu/cole-slaw.jpg'
+        image: '/images/menu/cole-slaw.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 4.99 },
+              { label: 'Medium', price: 6.99 },
+              { label: 'Large', price: 9.99 }
+            ]
+          }
+        }
       },
       {
-        id: 'side-slaw-md',
-        name: 'Cole Slaw (Medium)',
-        description: 'Creamy homemade coleslaw',
-        price: 6.99,
-        image: '/images/menu/cole-slaw.jpg'
-      },
-      {
-        id: 'side-slaw-lg',
-        name: 'Cole Slaw (Large)',
-        description: 'Creamy homemade coleslaw',
-        price: 9.99,
-        image: '/images/menu/cole-slaw.jpg'
-      },
-      {
-        id: 'side-potato-sm',
-        name: 'Potato Salad (Small)',
+        id: 'side-potato',
+        name: 'Potato Salad',
         description: 'Southern-style potato salad',
         price: 4.99,
-        image: '/images/menu/potato-salad.jpg'
+        image: '/images/menu/potato-salad.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 4.99 },
+              { label: 'Medium', price: 6.99 },
+              { label: 'Large', price: 9.99 }
+            ]
+          }
+        }
       },
       {
-        id: 'side-potato-md',
-        name: 'Potato Salad (Medium)',
-        description: 'Southern-style potato salad',
-        price: 6.99,
-        image: '/images/menu/potato-salad.jpg'
-      },
-      {
-        id: 'side-potato-lg',
-        name: 'Potato Salad (Large)',
-        description: 'Southern-style potato salad',
-        price: 9.99,
-        image: '/images/menu/potato-salad.jpg'
-      },
-      {
-        id: 'side-fries-sm',
-        name: 'French Fries (Small)',
+        id: 'side-fries',
+        name: 'French Fries',
         description: 'Crispy golden fries',
         price: 4.99,
-        image: '/images/menu/fries.jpg'
+        image: '/images/menu/fries.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 4.99 },
+              { label: 'Medium', price: 6.99 },
+              { label: 'Large', price: 9.99 }
+            ]
+          }
+        }
       },
       {
-        id: 'side-fries-md',
-        name: 'French Fries (Medium)',
-        description: 'Crispy golden fries',
-        price: 6.99,
-        image: '/images/menu/fries.jpg'
-      },
-      {
-        id: 'side-fries-lg',
-        name: 'French Fries (Large)',
-        description: 'Crispy golden fries',
-        price: 9.99,
-        image: '/images/menu/fries.jpg'
-      },
-      {
-        id: 'side-mac-sm',
-        name: 'Mac and Cheese (Small)',
+        id: 'side-mac',
+        name: 'Mac and Cheese',
         description: 'Creamy homemade mac and cheese',
         price: 3.99,
-        image: '/images/menu/mac-and-cheese.jpg'
-      },
-      {
-        id: 'side-mac-md',
-        name: 'Mac and Cheese (Medium)',
-        description: 'Creamy homemade mac and cheese',
-        price: 4.99,
-        image: '/images/menu/mac-and-cheese.jpg'
-      },
-      {
-        id: 'side-mac-lg',
-        name: 'Mac and Cheese (Large)',
-        description: 'Creamy homemade mac and cheese',
-        price: 7.99,
-        image: '/images/menu/mac-and-cheese.jpg'
+        image: '/images/menu/mac-and-cheese.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 3.99 },
+              { label: 'Medium', price: 4.99 },
+              { label: 'Large', price: 7.99 }
+            ]
+          }
+        }
       }
     ]
   },
@@ -435,46 +417,36 @@ export const menuCategories = [
     description: 'Sweet endings to your meal',
     items: [
       {
-        id: 'dessert-banana-sm',
-        name: 'Banana Pudding (Small)',
+        id: 'dessert-banana',
+        name: 'Banana Pudding',
         description: 'Creamy homemade banana pudding',
         price: 5.99,
-        image: '/images/menu/banana-pudding.jpg'
+        image: '/images/menu/banana-pudding.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 5.99 },
+              { label: 'Medium', price: 6.99 },
+              { label: 'Large', price: 10.99 }
+            ]
+          }
+        }
       },
       {
-        id: 'dessert-banana-md',
-        name: 'Banana Pudding (Medium)',
-        description: 'Creamy homemade banana pudding',
-        price: 6.99,
-        image: '/images/menu/banana-pudding.jpg'
-      },
-      {
-        id: 'dessert-banana-lg',
-        name: 'Banana Pudding (Large)',
-        description: 'Creamy homemade banana pudding',
-        price: 10.99,
-        image: '/images/menu/banana-pudding.jpg'
-      },
-      {
-        id: 'dessert-peach-sm',
-        name: 'Peach Cobbler (Small)',
+        id: 'dessert-peach',
+        name: 'Peach Cobbler',
         description: 'Warm peach cobbler with a flaky crust',
         price: 5.99,
-        image: '/images/menu/peach-cobbler.jpg'
-      },
-      {
-        id: 'dessert-peach-md',
-        name: 'Peach Cobbler (Medium)',
-        description: 'Warm peach cobbler with a flaky crust',
-        price: 6.99,
-        image: '/images/menu/peach-cobbler.jpg'
-      },
-      {
-        id: 'dessert-peach-lg',
-        name: 'Peach Cobbler (Large)',
-        description: 'Warm peach cobbler with a flaky crust',
-        price: 10.99,
-        image: '/images/menu/peach-cobbler.jpg'
+        image: '/images/menu/peach-cobbler.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 5.99 },
+              { label: 'Medium', price: 6.99 },
+              { label: 'Large', price: 10.99 }
+            ]
+          }
+        }
       },
       {
         id: 'dessert-pound',
@@ -533,7 +505,7 @@ export const featuredItems = [
   menuCategories.find(c => c.id === 'bbq-ribs')?.items.find(i => i.id === 'bbq-full'),
   menuCategories.find(c => c.id === 'chicken')?.items.find(i => i.id === 'ch-dinner'),
   menuCategories.find(c => c.id === 'specials')?.items.find(i => i.id === 'family-4'),
-  menuCategories.find(c => c.id === 'desserts')?.items.find(i => i.id === 'dessert-banana-sm')
+  menuCategories.find(c => c.id === 'desserts')?.items.find(i => i.id === 'dessert-banana')
 ].filter(Boolean);
 
 export const restaurantInfo = {

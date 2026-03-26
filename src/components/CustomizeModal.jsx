@@ -4,16 +4,30 @@ import './CustomizeModal.css';
 function CustomizeModal({ item, onAdd, onClose, initialSelections }) {
   const [selectedSides, setSelectedSides] = useState(initialSelections?.selectedSides || []);
   const [selectedMeats, setSelectedMeats] = useState(initialSelections?.selectedMeats || []);
+  const [selectedSize, setSelectedSize] = useState(() => {
+    if (initialSelections?.selectedSize && item.customization?.size) {
+      const idx = item.customization.size.options.findIndex(o => o.label === initialSelections.selectedSize);
+      return idx >= 0 ? idx : null;
+    }
+    return null;
+  });
   const [specialInstructions, setSpecialInstructions] = useState(initialSelections?.specialInstructions || '');
   const overlayRef = useRef(null);
 
   const { customization } = item;
   const sidesConfig = customization?.sides;
   const meatsConfig = customization?.meats;
+  const sizeConfig = customization?.size;
 
   const sidesComplete = !sidesConfig || selectedSides.length === sidesConfig.count;
   const meatsComplete = !meatsConfig || selectedMeats.length === meatsConfig.count;
-  const canAdd = sidesComplete && meatsComplete;
+  const sizeComplete = !sizeConfig || selectedSize !== null;
+  const canAdd = sidesComplete && meatsComplete && sizeComplete;
+
+  // Determine displayed price — use selected size price if applicable
+  const displayPrice = selectedSize !== null && sizeConfig
+    ? sizeConfig.options[selectedSize].price
+    : item.price;
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -45,15 +59,24 @@ function CustomizeModal({ item, onAdd, onClose, initialSelections }) {
 
   const handleAdd = () => {
     if (!canAdd) return;
+    const sizeOption = sizeConfig && selectedSize !== null ? sizeConfig.options[selectedSize] : null;
     onAdd({
       selectedSides: sidesConfig ? selectedSides : undefined,
       selectedMeats: meatsConfig ? selectedMeats : undefined,
+      selectedSize: sizeOption ? sizeOption.label : undefined,
+      sizePrice: sizeOption ? sizeOption.price : undefined,
       specialInstructions: specialInstructions.trim() || undefined,
     });
   };
 
   const handleOverlayClick = (e) => {
     if (e.target === overlayRef.current) onClose();
+  };
+
+  const getIncompleteLabel = () => {
+    if (!sizeComplete) return 'Select a size to continue';
+    if (!meatsComplete) return 'Select your meats to continue';
+    return 'Select your sides to continue';
   };
 
   return (
@@ -68,8 +91,32 @@ function CustomizeModal({ item, onAdd, onClose, initialSelections }) {
 
         <div className="customize-header">
           <h2>{item.name}</h2>
-          <span className="customize-price">${item.price.toFixed(2)}</span>
+          <span className="customize-price">${displayPrice.toFixed(2)}</span>
         </div>
+
+        {sizeConfig && (
+          <div className="customize-section">
+            <div className="customize-section-header">
+              <h3>Choose Size</h3>
+              {selectedSize !== null && (
+                <span className="customize-count complete">Selected</span>
+              )}
+            </div>
+            <div className="customize-size-options">
+              {sizeConfig.options.map((option, index) => (
+                <button
+                  key={option.label}
+                  className={`customize-size-option ${selectedSize === index ? 'selected' : ''}`}
+                  onClick={() => setSelectedSize(index)}
+                  type="button"
+                >
+                  <span className="size-label">{option.label}</span>
+                  <span className="size-price">${option.price.toFixed(2)}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {meatsConfig && (
           <div className="customize-section">
@@ -144,7 +191,7 @@ function CustomizeModal({ item, onAdd, onClose, initialSelections }) {
           disabled={!canAdd}
           type="button"
         >
-          {canAdd ? (initialSelections ? 'Update Order' : 'Add to Order') : `Select your ${!meatsComplete ? 'meats' : 'sides'} to continue`}
+          {canAdd ? (initialSelections ? 'Update Order' : `Add to Order — $${displayPrice.toFixed(2)}`) : getIncompleteLabel()}
         </button>
       </div>
     </div>
