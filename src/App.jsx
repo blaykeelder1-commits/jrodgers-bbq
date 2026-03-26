@@ -13,6 +13,7 @@ import Contact from './pages/Contact';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import NotFound from './pages/NotFound';
 import OrderConfirmation from './pages/OrderConfirmation';
+import KitchenOrders from './pages/KitchenOrders';
 import MobileOrderCTA from './components/MobileOrderCTA';
 import './styles/global.css';
 
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/gallery" element={<Gallery />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                <Route path="/orders" element={<KitchenOrders />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

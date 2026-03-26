@@ -1,0 +1,245 @@
+/* Kitchen Orders — dark theme, large text for kitchen display */
+.kitchen-orders {
+  min-height: 100vh;
+  background: #1a1a1a;
+  color: #f0f0f0;
+  padding: var(--spacing-md);
+  font-family: var(--font-family-body);
+}
+
+.kitchen-orders__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid #333;
+}
+
+.kitchen-orders__header h1 {
+  font-size: var(--font-size-3xl);
+  color: var(--color-gold);
+  margin: 0;
+}
+
+.kitchen-orders__status {
+  font-size: var(--font-size-lg);
+}
+
+.kitchen-orders__loading {
+  color: var(--color-gold);
+}
+
+.kitchen-orders__error {
+  color: var(--color-error);
+}
+
+.kitchen-orders__count {
+  color: #999;
+}
+
+.kitchen-orders__empty {
+  text-align: center;
+  font-size: var(--font-size-2xl);
+  color: #666;
+  padding: var(--spacing-3xl) 0;
+}
+
+.kitchen-orders__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.kitchen-orders__section-title {
+  font-size: var(--font-size-xl);
+  color: #777;
+  margin-bottom: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid #333;
+}
+
+/* Order Card */
+.order-card {
+  background: #2a2a2a;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+.order-card--new {
+  border: 3px solid var(--color-secondary);
+  animation: pulse-border 1.5s ease-in-out infinite;
+}
+
+.order-card--seen {
+  opacity: 0.5;
+  border: 1px solid #444;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 8px rgba(216, 67, 21, 0.4);
+  }
+  50% {
+    border-color: var(--color-error);
+    box-shadow: 0 0 20px rgba(244, 67, 54, 0.6);
+  }
+}
+
+.order-card__badge {
+  display: inline-block;
+  align-self: flex-start;
+  background: var(--color-secondary);
+  color: white;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+}
+
+.order-card__pickup {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-gold);
+  line-height: 1.1;
+  margin-top: var(--spacing-xs);
+}
+
+.order-card__pickup-label {
+  font-size: var(--font-size-sm);
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-xs);
+}
+
+.order-card__customer {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.order-card__name {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: #fff;
+}
+
+.order-card__phone {
+  font-size: var(--font-size-base);
+  color: var(--color-gold);
+  text-decoration: none;
+}
+
+.order-card__phone:hover {
+  text-decoration: underline;
+}
+
+.order-card__type {
+  font-size: var(--font-size-sm);
+  color: #aaa;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.order-card__items {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-sm) 0;
+  border-top: 1px solid #444;
+  border-bottom: 1px solid #444;
+  padding: var(--spacing-sm) 0;
+}
+
+.order-card__item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  padding: 4px 0;
+  font-size: var(--font-size-lg);
+}
+
+.order-card__qty {
+  font-weight: 700;
+  color: var(--color-secondary-light);
+  min-width: 2em;
+}
+
+.order-card__item-name {
+  flex: 1;
+  color: #e0e0e0;
+}
+
+.order-card__item-price {
+  color: #999;
+  font-size: var(--font-size-base);
+}
+
+.order-card__total {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: #fff;
+  text-align: right;
+}
+
+.order-card__meta {
+  font-size: var(--font-size-sm);
+  color: #666;
+}
+
+.order-card__btn {
+  width: 100%;
+  padding: var(--spacing-md);
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  background: var(--color-success);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  margin-top: var(--spacing-sm);
+  transition: background var(--transition-fast);
+}
+
+.order-card__btn:hover {
+  background: #388E3C;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .kitchen-orders {
+    padding: var(--spacing-sm);
+  }
+
+  .kitchen-orders__header h1 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .kitchen-orders__grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  .order-card__pickup {
+    font-size: 2rem;
+  }
+}
+
+/* Hide site header/footer on this page — the parent layout wraps it */
+.kitchen-orders ~ .site-footer,
+.kitchen-orders ~ .site-header {
+  display: none;
+}
