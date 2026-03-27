@@ -106,13 +106,6 @@ export const menuCategories = [
         price: 9.99,
         image: '/images/menu/fried-ribs.jpg'
       },
-      {
-        id: 'ss-loaded-potato',
-        name: 'Loaded Baked Potato',
-        description: 'Loaded baked potato with your choice of meat',
-        price: 12.99,
-        image: '/images/menu/combo-dinner.jpg'
-      }
     ]
   },
   {
@@ -468,74 +461,6 @@ export const menuCategories = [
         description: 'Ask about our daily cake selection',
         price: 4.99,
         image: '/images/menu/pound-cake-slice.jpg'
-      }
-    ]
-  },
-  {
-    id: 'sauces',
-    name: 'BBQ Sauce',
-    description: 'Take home our signature sauces',
-    items: [
-      {
-        id: 'sauce-bk',
-        name: 'BK BBQ Sauce',
-        description: 'Our signature BK BBQ sauce',
-        price: 0.01,
-        image: '/images/menu/combo-dinner.jpg'
-      },
-      {
-        id: 'sauce-regular',
-        name: 'BBQ Sauce',
-        description: 'Classic BBQ sauce',
-        price: 0.01,
-        image: '/images/menu/combo-dinner.jpg'
-      },
-      {
-        id: 'test-xl-drink',
-        name: 'XL Drink',
-        description: 'Extra large fountain drink',
-        price: 0.01,
-        image: '/images/menu/sweet-tea.jpg'
-      },
-      {
-        id: 'test-rib-dinner',
-        name: 'Rib Dinner (Test)',
-        description: 'Delicious cut ribs with 2 sides & bread',
-        price: 0.01,
-        image: '/images/menu/half-slab-ribs.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
-      },
-      {
-        id: 'test-baked-beans',
-        name: 'Baked Beans (Test)',
-        description: 'Our famous baked beans',
-        price: 0.01,
-        image: '/images/menu/yo-jo-beans.jpg',
-        customization: {
-          size: {
-            options: [
-              { label: 'Small', price: 0.01 },
-              { label: 'Medium', price: 0.01 },
-              { label: 'Large', price: 0.01 }
-            ]
-          }
-        }
-      },
-      {
-        id: 'test-apple-pie',
-        name: 'Apple Pie (Test)',
-        description: 'Warm apple pie',
-        price: 0.01,
-        image: '/images/menu/peach-cobbler.jpg',
-        customization: {
-          size: {
-            options: [
-              { label: 'Small', price: 0.01 },
-              { label: 'Medium', price: 0.01 },
-              { label: 'Large', price: 0.01 }
-            ]
-          }
-        }
       }
     ]
   },
