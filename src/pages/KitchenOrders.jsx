@@ -146,7 +146,20 @@ function KitchenOrders() {
 
       {seenOrders.length > 0 && (
         <>
-          <h2 className="kitchen-orders__section-title">Completed</h2>
+          <div className="kitchen-orders__section-header">
+            <h2 className="kitchen-orders__section-title">Completed</h2>
+            <button
+              className="kitchen-orders__clear-btn"
+              onClick={() => {
+                const allSeen = {};
+                orders.forEach(o => { allSeen[o.orderId] = Date.now(); });
+                setSeenMap(allSeen);
+                setSeen(allSeen);
+              }}
+            >
+              Clear All Orders
+            </button>
+          </div>
           <div className="kitchen-orders__grid kitchen-orders__grid--seen">
             {seenOrders.map((order) => (
               <OrderCard key={order.orderId} order={order} isNew={false} />
@@ -178,7 +191,7 @@ function OrderCard({ order, onSeen, isNew }) {
       </div>
 
       <div className="order-card__type">
-        {order.orderType === 'delivery' ? 'Delivery' : 'Pickup'}
+        {order.orderType === 'delivery' ? 'Delivery' : 'To-Go'}
       </div>
 
       <ul className="order-card__items">

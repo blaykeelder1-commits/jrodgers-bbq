@@ -54,12 +54,36 @@
   margin-bottom: var(--spacing-xl);
 }
 
+.kitchen-orders__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
 .kitchen-orders__section-title {
   font-size: var(--font-size-xl);
   color: #777;
-  margin-bottom: var(--spacing-md);
+  margin: 0;
   padding-top: var(--spacing-md);
   border-top: 1px solid #333;
+}
+
+.kitchen-orders__clear-btn {
+  padding: 10px 24px;
+  background: #c41e3a;
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family-body);
+  transition: background 0.2s;
+}
+
+.kitchen-orders__clear-btn:hover {
+  background: #a01830;
 }
 
 /* Order Card */
