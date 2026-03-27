@@ -47,12 +47,13 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
   for (const li of lineItems) {
     const productId = resolveProductId(li);
     if (productId) {
-      transactionItems.push({
+      const item = {
         ProductId: productId,
         Quantity: li.quantity,
-        UnitPrice: li.unitPriceCents / 100,
-        Notes: li.notes || ''
-      });
+        UnitPrice: li.unitPriceCents / 100
+      };
+      if (li.notes) item.Notes = li.notes;
+      transactionItems.push(item);
     } else {
       // Track unmapped items — still include as notes so kitchen knows
       unmappedItems.push(`${li.quantity}x ${li.name} ($${(li.unitPriceCents / 100).toFixed(2)})`);
