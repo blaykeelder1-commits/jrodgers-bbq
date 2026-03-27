@@ -70,6 +70,8 @@ export const eposProductMap = {
   // === Sauces ===
   'sauce-bk':      39332879, // BK BBQ Sauce — $0.01
   'sauce-regular': 39332880, // BBQ Sauce — $0.01
+  'test-xl-drink':   39336526, // XL Drink (Test) — $0.01
+  'test-rib-dinner': 39336527, // Rib Dinner (Test) — $0.01
 };
 
 // Sized items: website menu item ID -> { size label: EPOS Product ID }
@@ -111,5 +113,15 @@ export const eposSizedProductMap = {
     'Small':  34740292, // Peach Cobbler (small) — $5.99
     'Medium': 34740298, // Peach Cobbler (medium) — $6.99
     'Large':  34740302, // Peach Cobbler (large) — $10.99
+  },
+  'test-baked-beans': {
+    'Small':  39336528, // Baked Beans S (Test) — $0.01
+    'Medium': 39336529, // Baked Beans M (Test) — $0.01
+    'Large':  39336530, // Baked Beans L (Test) — $0.01
+  },
+  'test-apple-pie': {
+    'Small':  39336531, // Apple Pie S (Test) — $0.01
+    'Medium': 39336532, // Apple Pie M (Test) — $0.01
+    'Large':  39336533, // Apple Pie L (Test) — $0.01
   },
 };

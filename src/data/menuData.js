@@ -489,6 +489,53 @@ export const menuCategories = [
         description: 'Classic BBQ sauce',
         price: 0.01,
         image: '/images/menu/combo-dinner.jpg'
+      },
+      {
+        id: 'test-xl-drink',
+        name: 'XL Drink',
+        description: 'Extra large fountain drink',
+        price: 0.01,
+        image: '/images/menu/sweet-tea.jpg'
+      },
+      {
+        id: 'test-rib-dinner',
+        name: 'Rib Dinner (Test)',
+        description: 'Delicious cut ribs with 2 sides & bread',
+        price: 0.01,
+        image: '/images/menu/half-slab-ribs.jpg',
+        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+      },
+      {
+        id: 'test-baked-beans',
+        name: 'Baked Beans (Test)',
+        description: 'Our famous baked beans',
+        price: 0.01,
+        image: '/images/menu/yo-jo-beans.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 0.01 },
+              { label: 'Medium', price: 0.01 },
+              { label: 'Large', price: 0.01 }
+            ]
+          }
+        }
+      },
+      {
+        id: 'test-apple-pie',
+        name: 'Apple Pie (Test)',
+        description: 'Warm apple pie',
+        price: 0.01,
+        image: '/images/menu/peach-cobbler.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 0.01 },
+              { label: 'Medium', price: 0.01 },
+              { label: 'Large', price: 0.01 }
+            ]
+          }
+        }
       }
     ]
   },
