@@ -84,8 +84,18 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
   }
 
   // Send Central Time (Alabama) so EPOS receipt shows correct local time
-  const ctNow = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' });
-  const ctDate = new Date(ctNow).toISOString().replace('Z', '');
+  // CDT (March-Nov) = UTC-5, CST (Nov-Mar) = UTC-6
+  // Determine offset by checking if we're in DST
+  const now = new Date();
+  const jan = new Date(now.getFullYear(), 0, 1).getTimezoneOffset();
+  const jul = new Date(now.getFullYear(), 6, 1).getTimezoneOffset();
+  // On Vercel (UTC), offset is always 0, so compute CT directly: UTC-5 (CDT) or UTC-6 (CST)
+  // Alabama observes CDT from 2nd Sunday March to 1st Sunday November
+  const month = now.getUTCMonth(); // 0-11
+  const isDST = month >= 2 && month <= 10; // Approximate: March through October
+  const ctOffsetHours = isDST ? -5 : -6;
+  const ctTime = new Date(now.getTime() + ctOffsetHours * 60 * 60 * 1000);
+  const ctDate = ctTime.toISOString().replace('Z', '');
 
   const transaction = {
     DeviceId: DEVICE_ID,
