@@ -70,7 +70,7 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
     'ONLINE ORDER',
     customerName,
     `Pickup: ${pickupTime}`,
-    orderType?.toUpperCase()
+    'TO-GO'
   ];
   if (unmappedItems.length > 0) {
     notesParts.push(`ALSO: ${unmappedItems.join(', ')}`);
