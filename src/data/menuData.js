@@ -1,68 +1,70 @@
+const sideOptions = ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens', 'Candied Yams', 'Cabbage'];
+
 export const menuCategories = [
   {
     id: 'buffet',
     name: 'BBQ Buffet',
-    description: 'All-you-can-eat BBQ',
+    description: 'All-you-can-eat BBQ — Dine In Only',
     items: [
       {
-        id: 'buffet-special',
-        name: 'Buffet Special (Wed & Thu)',
+        id: 'buffet-dinner',
+        name: 'BBQ Buffet',
         description: 'All-you-can-eat BBQ buffet including ribs, smoked meats, chicken & sides',
-        price: 19.99,
-        image: '/images/menu/combo-dinner.jpg'
-      },
-      {
-        id: 'buffet-weekend',
-        name: 'Buffet (Fri/Sat/Sun, Until 2PM)',
-        description: 'All-you-can-eat BBQ buffet including ribs, smoked meats, chicken & sides',
-        price: 20.99,
-        image: '/images/menu/combo-dinner.jpg'
+        price: 21.99,
+        image: '/images/menu/combo-dinner.jpg',
+        dineInOnly: true
       },
       {
         id: 'buffet-ayce',
-        name: 'All You Can Eat (After 2PM)',
-        description: 'All-you-can-eat ribs after 2PM',
-        price: 24.99,
-        image: '/images/menu/combo-dinner.jpg'
-      },
-      {
-        id: 'buffet-ayce-premium',
-        name: 'All You Can Eat Wet/Dry Ribs & 2 Sides (After 2PM)',
-        description: 'All-you-can-eat wet & dry ribs with 2 sides after 2PM',
+        name: 'All You Can Eat',
+        description: 'All-you-can-eat ribs with 2 sides',
         price: 26.99,
         image: '/images/menu/combo-dinner.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        dineInOnly: true,
+        customization: { sides: { count: 2, options: sideOptions } }
       }
     ]
   },
   {
     id: 'lunch-specials',
     name: 'Lunch Specials',
-    description: 'Wednesday & Thursday, 10:00 AM - 2:00 PM',
+    description: 'Available 10:00 AM - 2:00 PM',
+    timeRestricted: { start: 10, end: 14 },
     items: [
       {
         id: 'ls-ribs',
         name: 'Rib Lunch',
-        description: '3 bones with 2 sides & bread',
-        price: 12.00,
+        description: '3 bones & 2 knuckles with 2 sides & bread',
+        price: 14.49,
         image: '/images/menu/half-slab-ribs.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
       },
       {
         id: 'ls-chicken',
         name: 'Chicken Lunch',
         description: 'Smoked chicken with 2 sides & bread',
-        price: 10.00,
+        price: 14.49,
         image: '/images/menu/pulled-pork.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
       },
       {
         id: 'ls-sausage',
-        name: 'Smoked Country Links Lunch',
+        name: 'Sausage Links Lunch',
         description: 'Slowly smoked country links with 2 sides & bread',
-        price: 10.00,
+        price: 14.49,
         image: '/images/menu/sausage-sandwich.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
+      },
+      {
+        id: 'ls-rib-3meat',
+        name: 'Rib Lunch Special (3 Meats)',
+        description: '3 different meats with 2 sides & bread',
+        price: 16.49,
+        image: '/images/menu/combo-dinner.jpg',
+        customization: {
+          sides: { count: 2, options: sideOptions },
+          meats: { count: 3, options: ['Ribs', 'Smoked Chicken', 'Sausage', 'Pulled Pork'] }
+        }
       }
     ]
   },
@@ -82,14 +84,14 @@ export const menuCategories = [
         id: 'ss-sausage',
         name: 'Sausage On A Bun',
         description: 'Sliced sausage lightly sauced',
-        price: 6.99,
+        price: 7.99,
         image: '/images/menu/sausage-sandwich.jpg'
       },
       {
         id: 'ss-dog',
         name: 'Smoked Dog',
         description: 'Smoked sausage on bun with sauce',
-        price: 5.99,
+        price: 7.99,
         image: '/images/menu/sausage-sandwich.jpg'
       },
       {
@@ -97,15 +99,9 @@ export const menuCategories = [
         name: 'Knuckle Sandwich',
         description: 'Our signature knuckle sandwich',
         price: 8.99,
-        image: '/images/menu/pulled-pork.jpg'
-      },
-      {
-        id: 'ss-rib-tip',
-        name: 'Rib Tip Sandwich',
-        description: 'Tender rib tips on a bun',
-        price: 9.99,
-        image: '/images/menu/fried-ribs.jpg'
-      },
+        image: '/images/menu/pulled-pork.jpg',
+        bogo: 'Buy One Get One Free (sandwich only)'
+      }
     ]
   },
   {
@@ -119,7 +115,7 @@ export const menuCategories = [
         description: 'With 2 sides & tea',
         price: 10.99,
         image: '/images/menu/sausage-sandwich.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
       },
       {
         id: 'sc-pork',
@@ -127,15 +123,7 @@ export const menuCategories = [
         description: 'With 2 sides & tea',
         price: 11.99,
         image: '/images/menu/pulled-pork.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
-      },
-      {
-        id: 'sc-rib-tip',
-        name: 'Rib Tip Sandwich Combo',
-        description: 'With 2 sides & tea',
-        price: 13.99,
-        image: '/images/menu/fried-ribs.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
       },
       {
         id: 'sc-knuckle',
@@ -143,7 +131,32 @@ export const menuCategories = [
         description: 'With 2 sides & tea',
         price: 12.99,
         image: '/images/menu/pulled-pork.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
+      },
+      {
+        id: 'sc-dog-sausage',
+        name: 'Smoked Dog & Smoked Sausage Sandwich Combo',
+        description: 'With 2 sides & tea',
+        price: 14.99,
+        image: '/images/menu/sausage-sandwich.jpg',
+        customization: { sides: { count: 2, options: sideOptions } }
+      },
+      {
+        id: 'sc-chicken',
+        name: 'Pulled Chicken Sandwich Combo',
+        description: 'With 2 sides & tea',
+        price: 12.99,
+        image: '/images/menu/pulled-pork.jpg',
+        customization: { sides: { count: 2, options: sideOptions } }
+      },
+      {
+        id: 'sc-pulled-pork',
+        name: 'Pulled Pork Sandwich Combo',
+        description: 'With 2 sides & tea',
+        price: 15.99,
+        image: '/images/menu/pulled-pork.jpg',
+        customization: { sides: { count: 2, options: sideOptions } },
+        bogo: 'Buy One Combo, Get a Sandwich Free'
       }
     ]
   },
@@ -155,40 +168,40 @@ export const menuCategories = [
       {
         id: 'bbq-dinner',
         name: 'Rib Dinner',
-        description: 'Delicious cut ribs with 2 sides & bread',
-        price: 15.99,
+        description: '5 ribs and 3 knuckles with 2 sides & bread',
+        price: 18.49,
         image: '/images/menu/half-slab-ribs.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
       },
       {
         id: 'bbq-half',
         name: 'Half Slab',
         description: 'Half rack of mouth-watering pork ribs with bread',
-        price: 24.99,
+        price: 19.99,
         image: '/images/menu/half-slab-ribs.jpg'
       },
       {
         id: 'bbq-full',
         name: 'Slab Ribs',
         description: 'Full rack of mouth-watering pork ribs with bread',
-        price: 29.99,
+        price: 31.99,
         image: '/images/menu/half-slab-ribs.jpg'
       },
       {
         id: 'bbq-sandwich',
         name: 'Rib Sandwich',
         description: 'Mouth-watering pork ribs on bread',
-        price: 13.99,
+        price: 15.99,
         image: '/images/menu/fried-ribs.jpg'
       },
       {
         id: 'bbq-combo',
-        name: 'Combo Dinner',
+        name: '3 Meat Combo Dinner',
         description: '3 different meats with 2 sides & bread',
-        price: 18.99,
+        price: 21.99,
         image: '/images/menu/combo-dinner.jpg',
         customization: {
-          sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] },
+          sides: { count: 2, options: sideOptions },
           meats: { count: 3, options: ['Ribs', 'Smoked Chicken', 'Sausage', 'Pulled Pork'] }
         }
       }
@@ -203,23 +216,23 @@ export const menuCategories = [
         id: 'ch-whole',
         name: 'Whole Chicken',
         description: 'Delicious smoked chicken with bread',
-        price: 16.99,
+        price: 18.69,
         image: '/images/menu/pulled-pork.jpg'
       },
       {
         id: 'ch-half',
         name: 'Half Chicken',
         description: 'Delicious smoked chicken with bread',
-        price: 11.99,
+        price: 13.99,
         image: '/images/menu/pulled-pork.jpg'
       },
       {
         id: 'ch-dinner',
         name: 'Chicken Dinner',
         description: 'Half delicious smoked chicken with 2 sides & bread',
-        price: 14.99,
+        price: 16.99,
         image: '/images/menu/pulled-pork.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
       }
     ]
   },
@@ -241,7 +254,7 @@ export const menuCategories = [
         description: 'Smoked sausage with 2 sides & bread',
         price: 16.99,
         image: '/images/menu/sausage-sandwich.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
       }
     ]
   },
@@ -254,7 +267,7 @@ export const menuCategories = [
         id: 'pork-pound',
         name: '1lb Of Pulled Pork',
         description: 'A full pound of our tender pulled pork',
-        price: 14.84,
+        price: 17.99,
         image: '/images/menu/pulled-pork.jpg'
       },
       {
@@ -263,7 +276,7 @@ export const menuCategories = [
         description: 'Pulled pork with 2 sides & bread',
         price: 15.99,
         image: '/images/menu/pulled-pork.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
       }
     ]
   },
@@ -340,17 +353,95 @@ export const menuCategories = [
         id: 'side-mac',
         name: 'Mac and Cheese',
         description: 'Creamy homemade mac and cheese',
-        price: 3.99,
+        price: 6.99,
         image: '/images/menu/mac-and-cheese.jpg',
         customization: {
           size: {
             options: [
-              { label: 'Small', price: 3.99 },
-              { label: 'Medium', price: 4.99 },
-              { label: 'Large', price: 7.99 }
+              { label: 'Small', price: 6.99 },
+              { label: 'Medium', price: 7.99 },
+              { label: 'Large', price: 11.99 }
             ]
           }
         }
+      },
+      {
+        id: 'side-greens',
+        name: 'Collard Greens',
+        description: 'Slow-cooked southern collard greens',
+        price: 6.99,
+        image: '/images/menu/collard-greens.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 6.99 },
+              { label: 'Medium', price: 7.99 },
+              { label: 'Large', price: 11.99 }
+            ]
+          }
+        }
+      },
+      {
+        id: 'side-yams',
+        name: 'Candied Yams',
+        description: 'Sweet and savory candied yams',
+        price: 6.99,
+        image: '/images/menu/collard-greens.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 6.99 },
+              { label: 'Medium', price: 7.99 },
+              { label: 'Large', price: 11.99 }
+            ]
+          }
+        }
+      },
+      {
+        id: 'side-cabbage',
+        name: 'Cabbage',
+        description: 'Southern-style cooked cabbage',
+        price: 6.99,
+        image: '/images/menu/collard-greens.jpg',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 6.99 },
+              { label: 'Medium', price: 7.99 },
+              { label: 'Large', price: 11.99 }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    id: 'fish-wings',
+    name: 'Fried Fish & Wings',
+    description: 'Fried baskets and wings',
+    items: [
+      {
+        id: 'fish-2pc',
+        name: 'Fried Fish Basket (2pc)',
+        description: '2 pieces of fried fish with a side',
+        price: 14.99,
+        image: '/images/menu/combo-dinner.jpg',
+        customization: { sides: { count: 1, options: sideOptions } }
+      },
+      {
+        id: 'fish-3pc',
+        name: 'Fried Fish Basket (3pc)',
+        description: '3 pieces of fried fish with a side',
+        price: 16.99,
+        image: '/images/menu/combo-dinner.jpg',
+        customization: { sides: { count: 1, options: sideOptions } }
+      },
+      {
+        id: 'wings-6pc',
+        name: 'Fried Party Wing Basket',
+        description: '6 piece party wings',
+        price: 9.99,
+        image: '/images/menu/combo-dinner.jpg'
       }
     ]
   },
@@ -360,25 +451,18 @@ export const menuCategories = [
     description: 'For our little guests (12 & under)',
     items: [
       {
-        id: 'kid-chicken-1pc',
-        name: '1pc Chicken',
-        description: 'One piece of chicken',
-        price: 5.99,
-        image: '/images/menu/pulled-pork.jpg'
+        id: 'kid-hotdog',
+        name: 'Hot Dog with Fries',
+        description: 'Hot dog served with fries',
+        price: 6.99,
+        image: '/images/menu/sausage-sandwich.jpg'
       },
       {
-        id: 'kid-chicken-buffet',
-        name: 'Chicken Buffet (2pc)',
-        description: 'Two pieces of chicken',
+        id: 'kid-chicken-fries',
+        name: 'Chicken Fries with Fries',
+        description: 'Chicken fries served with fries',
         price: 7.99,
         image: '/images/menu/pulled-pork.jpg'
-      },
-      {
-        id: 'kid-rib-sandwich',
-        name: 'Rib Sandwich',
-        description: 'Kid-sized rib sandwich',
-        price: 7.99,
-        image: '/images/menu/fried-ribs.jpg'
       }
     ]
   },
@@ -391,16 +475,24 @@ export const menuCategories = [
         id: 'family-4',
         name: 'Family Of Four Special',
         description: '1 slab of barbecue, 1/2 chicken, 1lb smoked sausage & 2 large sides',
-        price: 58.99,
+        price: 62.99,
         image: '/images/menu/combo-dinner.jpg',
-        customization: { sides: { count: 2, options: ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens'] } }
+        customization: { sides: { count: 2, options: sideOptions } }
       },
+    ]
+  },
+  {
+    id: 'vegetable-plate',
+    name: 'Vegetable Plate',
+    description: 'Build your own plate with your favorite sides',
+    items: [
       {
-        id: 'veggie',
-        name: 'Vegetable of the Day',
-        description: 'Ask about our daily vegetable selection',
-        price: 3.99,
-        image: '/images/menu/collard-greens.jpg'
+        id: 'veggie-plate',
+        name: 'Vegetable Plate',
+        description: 'Vegetable plate with 3 sides',
+        price: 15.99,
+        image: '/images/menu/collard-greens.jpg',
+        customization: { sides: { count: 3, options: sideOptions } }
       }
     ]
   },
@@ -443,23 +535,23 @@ export const menuCategories = [
       },
       {
         id: 'dessert-pound',
-        name: 'Pound Cake',
-        description: 'Classic homemade pound cake',
-        price: 3.99,
+        name: 'Lemon Pound Cake',
+        description: 'Classic homemade lemon pound cake',
+        price: 3.00,
         image: '/images/menu/pound-cake-slice.jpg'
       },
       {
         id: 'dessert-redvelvet',
         name: 'Red Velvet Cake',
         description: 'Rich red velvet cake with cream cheese frosting',
-        price: 4.99,
+        price: 4.39,
         image: '/images/menu/pound-cake-slice.jpg'
       },
       {
-        id: 'dessert-cake',
-        name: 'Cake Slice',
-        description: 'Ask about our daily cake selection',
-        price: 4.99,
+        id: 'dessert-chocolate',
+        name: 'Chocolate Cake',
+        description: 'Rich chocolate cake',
+        price: 4.39,
         image: '/images/menu/pound-cake-slice.jpg'
       }
     ]
@@ -473,7 +565,7 @@ export const menuCategories = [
         id: 'drink-soft',
         name: 'Soft Drinks',
         description: 'Coke, Sprite, Dr Pepper, and more',
-        price: 2.99,
+        price: 2.49,
         image: 'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=400&h=300&fit=crop'
       },
       {

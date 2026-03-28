@@ -4,15 +4,18 @@ import { useToast } from '../context/ToastContext';
 import CustomizeModal from './CustomizeModal';
 import './MenuCard.css';
 
-function MenuCard({ item, showAddButton = true }) {
+function MenuCard({ item, showAddButton = true, unavailable = false }) {
   const { addItem } = useCart();
   const { showToast } = useToast();
   const [showCustomize, setShowCustomize] = useState(false);
 
   const hasSize = !!item.customization?.size;
   const hasCustomization = !!item.customization;
+  const isDineInOnly = !!item.dineInOnly;
+  const hideButton = isDineInOnly || unavailable;
 
   const handleAddToCart = () => {
+    if (unavailable) return;
     if (hasCustomization) {
       setShowCustomize(true);
     } else {
@@ -47,7 +50,7 @@ function MenuCard({ item, showAddButton = true }) {
 
   return (
     <>
-      <div className="menu-card">
+      <div className={`menu-card${unavailable ? ' menu-card--unavailable' : ''}`}>
         <div className="menu-card-image">
           <img src={item.image} alt={item.name} loading="lazy" />
         </div>
@@ -59,7 +62,16 @@ function MenuCard({ item, showAddButton = true }) {
             </span>
           </div>
           <p className="menu-card-description">{item.description}</p>
-          {showAddButton && (
+          {item.bogo && (
+            <span className="menu-card-bogo">{item.bogo}</span>
+          )}
+          {isDineInOnly && (
+            <span className="menu-card-dine-in">Dine In Only</span>
+          )}
+          {unavailable && (
+            <span className="menu-card-unavailable-label">Available 10 AM - 2 PM</span>
+          )}
+          {showAddButton && !hideButton && (
             <button className="menu-card-btn" onClick={handleAddToCart}>
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"></line>

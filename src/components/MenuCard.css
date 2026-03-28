@@ -4,6 +4,9 @@
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .menu-card:hover {
@@ -30,6 +33,13 @@
 
 .menu-card-content {
   padding: var(--spacing-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-card-description {
+  flex: 1;
 }
 
 .menu-card-header {
@@ -89,6 +99,56 @@
 
 .menu-card-btn:hover svg {
   transform: scale(1.2);
+}
+
+/* Unavailable state (time-restricted items outside hours) */
+.menu-card--unavailable {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(40%);
+}
+
+.menu-card--unavailable:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Dine In Only badge */
+.menu-card-dine-in {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--color-primary-dark, #2c1810);
+  color: white;
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: var(--radius-sm, 4px);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Unavailable time label */
+.menu-card-unavailable-label {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #888;
+  color: white;
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 600;
+  border-radius: var(--radius-sm, 4px);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* BOGO badge */
+.menu-card-bogo {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #d4380d;
+  color: white;
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 700;
+  border-radius: var(--radius-sm, 4px);
+  margin-bottom: var(--spacing-sm);
 }
 
 /* Compact variant for order page */

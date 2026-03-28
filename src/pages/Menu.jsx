@@ -4,9 +4,17 @@ import { menuCategories } from '../data/menuData';
 import usePageTitle from '../hooks/usePageTitle';
 import './Menu.css';
 
+function isWithinTimeRange(timeRestricted) {
+  if (!timeRestricted) return true;
+  const now = new Date();
+  const hour = now.getHours();
+  return hour >= timeRestricted.start && hour < timeRestricted.end;
+}
+
 function Menu() {
   usePageTitle('Menu');
   const [activeCategory, setActiveCategory] = useState(menuCategories[0].id);
+  const [currentHour, setCurrentHour] = useState(new Date().getHours());
 
   useEffect(() => {
     // Handle hash navigation
@@ -20,6 +28,14 @@ function Menu() {
         }
       }, 100);
     }
+  }, []);
+
+  // Re-check time every minute for lunch special availability
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentHour(new Date().getHours());
+    }, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const scrollToCategory = (categoryId) => {
@@ -65,25 +81,32 @@ function Menu() {
       {/* Menu Content */}
       <div className="menu-content">
         <div className="container">
-          {menuCategories.map((category) => (
-            <section
-              key={category.id}
-              id={category.id}
-              className="menu-category"
-            >
-              <div className="category-header">
-                <h2>{category.name}</h2>
-                {category.description && (
-                  <p className="category-description">{category.description}</p>
-                )}
-              </div>
-              <div className="menu-grid">
-                {category.items.map((item) => (
-                  <MenuCard key={item.id} item={item} />
-                ))}
-              </div>
-            </section>
-          ))}
+          {menuCategories.map((category) => {
+            const categoryUnavailable = category.timeRestricted && !isWithinTimeRange(category.timeRestricted);
+            return (
+              <section
+                key={category.id}
+                id={category.id}
+                className="menu-category"
+              >
+                <div className="category-header">
+                  <h2>{category.name}</h2>
+                  {category.description && (
+                    <p className="category-description">{category.description}</p>
+                  )}
+                </div>
+                <div className="menu-grid">
+                  {category.items.map((item) => (
+                    <MenuCard
+                      key={item.id}
+                      item={item}
+                      unavailable={categoryUnavailable}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </div>
     </div>

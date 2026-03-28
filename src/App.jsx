@@ -15,6 +15,7 @@ import NotFound from './pages/NotFound';
 import OrderConfirmation from './pages/OrderConfirmation';
 import KitchenOrders from './pages/KitchenOrders';
 import MobileOrderCTA from './components/MobileOrderCTA';
+import { Analytics } from '@vercel/analytics/react';
 import './styles/global.css';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
           </main>
           <MobileOrderCTA />
           <Footer />
+          <Analytics />
         </div>
       </Router>
       </ToastProvider>
