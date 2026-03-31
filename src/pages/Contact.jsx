@@ -123,15 +123,10 @@ function Contact() {
                   <div className="contact-details">
                     <h3>Hours</h3>
                     <ul className="hours-list">
-                      <li><span>Monday - Tuesday</span><span>Closed*</span></li>
+                      <li><span>Monday - Tuesday</span><span>Closed</span></li>
                       <li><span>Wednesday - Saturday</span><span>10AM - 9PM</span></li>
                       <li><span>Sunday</span><span>11AM - 5PM</span></li>
                     </ul>
-                    <p className="contact-note">
-                      *<a href="https://www.doordash.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-secondary)', textDecoration: 'none' }}>
-                        DoorDash delivery available Mon-Tue
-                      </a>
-                    </p>
                   </div>
                 </div>
               </div>

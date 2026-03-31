@@ -113,8 +113,7 @@ function Order() {
     const openHour = isSunday ? 11 : 10;
     const closeHour = isSunday ? 17 : 21;
     const isAfterHours = hour < openHour || hour >= closeHour;
-    const isDoorDashDay = isClosedDay;
-    return { isClosed: isClosedDay || isAfterHours, isDoorDashDay, isClosedDay };
+    return { isClosed: isClosedDay || isAfterHours, isClosedDay };
   };
 
   const status = getRestaurantStatus();

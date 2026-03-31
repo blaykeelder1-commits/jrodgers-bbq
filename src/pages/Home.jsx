@@ -66,6 +66,45 @@ function Home() {
         </div>
       </section>
 
+      {/* Gumbo Feature Section */}
+      <section className="section gumbo-feature-section">
+        <div className="container">
+          <div className="gumbo-feature-grid">
+            <div className="gumbo-feature-content">
+              <span className="gumbo-feature-badge">New on the Menu</span>
+              <h2>30 Years in the Making</h2>
+              <p>
+                Our gumbo is more than a dish &mdash; it's a legacy. Perfected over
+                three decades, this recipe brings together baby crab legs, smoked
+                turkey necks, tender chicken, and savory sausage, all simmered
+                in a beautifully dark roux and served with a generous side of rice.
+              </p>
+              <p>
+                Four premium proteins and seafood in every bowl. This isn't your
+                average gumbo &mdash; it's the one your taste buds have been
+                waiting for.
+              </p>
+              <div className="gumbo-feature-pricing">
+                <span className="gumbo-price-item">Small $6.99</span>
+                <span className="gumbo-price-divider">|</span>
+                <span className="gumbo-price-item">Medium $10.99</span>
+                <span className="gumbo-price-divider">|</span>
+                <span className="gumbo-price-item">Large $19.99</span>
+              </div>
+              <Link to="/menu#gumbo" className="btn btn-primary">
+                Order Gumbo Now
+              </Link>
+            </div>
+            <div className="gumbo-feature-image">
+              <img
+                src="https://images.unsplash.com/photo-1708790303870-452d9f872d1f?w=800&h=600&fit=crop"
+                alt="J Rodgers famous gumbo with crab legs, smoked turkey necks, chicken and sausage"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Items Section */}
       <section className="section featured-section">
         <div className="container">
@@ -128,7 +167,7 @@ function Home() {
               <ul className="hours-list">
                 <li>
                   <span>Monday - Tuesday</span>
-                  <span>Closed*</span>
+                  <span>Closed</span>
                 </li>
                 <li>
                   <span>Wednesday - Saturday</span>
@@ -139,11 +178,6 @@ function Home() {
                   <span>11AM - 5PM</span>
                 </li>
               </ul>
-              <p className="hours-note">
-                *<a href="https://www.doordash.com" target="_blank" rel="noopener noreferrer" className="doordash-link">
-                  DoorDash delivery available Mon-Tue
-                </a>
-              </p>
             </div>
 
             <div className="info-card location-card">

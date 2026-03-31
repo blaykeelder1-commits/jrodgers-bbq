@@ -281,6 +281,46 @@ export const menuCategories = [
     ]
   },
   {
+    id: 'gumbo',
+    name: "BK Gumbo",
+    description: 'A 30-year family recipe perfected with love',
+    items: [
+      {
+        id: 'gumbo-solo',
+        name: 'Gumbo',
+        description: 'Our famous gumbo with baby crab legs, smoked turkey necks, chicken & sausage in a slow-cooked roux, served with rice',
+        price: 6.99,
+        image: 'https://images.unsplash.com/photo-1708790303870-452d9f872d1f?w=800&h=600&fit=crop',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 6.99 },
+              { label: 'Medium', price: 10.99 },
+              { label: 'Large', price: 19.99 }
+            ]
+          }
+        }
+      },
+      {
+        id: 'gumbo-dinner',
+        name: 'Gumbo Dinner',
+        description: 'A bowl of our famous gumbo with baby crab legs, smoked turkey necks, chicken & sausage in a slow-cooked roux, served with rice & 2 sides',
+        price: 14.99,
+        image: 'https://images.unsplash.com/photo-1708790303870-452d9f872d1f?w=800&h=600&fit=crop',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 14.99 },
+              { label: 'Medium', price: 17.99 },
+              { label: 'Large', price: 20.99 }
+            ]
+          },
+          sides: { count: 2, options: sideOptions }
+        }
+      }
+    ]
+  },
+  {
     id: 'sides',
     name: 'Sides',
     description: 'Homemade sides to complete your meal',
@@ -409,6 +449,22 @@ export const menuCategories = [
               { label: 'Small', price: 6.99 },
               { label: 'Medium', price: 7.99 },
               { label: 'Large', price: 11.99 }
+            ]
+          }
+        }
+      },
+      {
+        id: 'side-gumbo',
+        name: 'Gumbo',
+        description: 'Premium 30-year recipe with baby crab legs, smoked turkey necks, chicken & sausage in a slow-cooked roux, served with rice',
+        price: 6.99,
+        image: 'https://images.unsplash.com/photo-1708790303870-452d9f872d1f?w=400&h=300&fit=crop',
+        customization: {
+          size: {
+            options: [
+              { label: 'Small', price: 6.99 },
+              { label: 'Medium', price: 10.99 },
+              { label: 'Large', price: 19.99 }
             ]
           }
         }
@@ -587,10 +643,10 @@ export const menuCategories = [
 ];
 
 export const featuredItems = [
+  menuCategories.find(c => c.id === 'gumbo')?.items.find(i => i.id === 'gumbo-dinner'),
   menuCategories.find(c => c.id === 'bbq-ribs')?.items.find(i => i.id === 'bbq-full'),
   menuCategories.find(c => c.id === 'chicken')?.items.find(i => i.id === 'ch-dinner'),
   menuCategories.find(c => c.id === 'specials')?.items.find(i => i.id === 'family-4'),
-  menuCategories.find(c => c.id === 'desserts')?.items.find(i => i.id === 'dessert-banana')
 ].filter(Boolean);
 
 export const restaurantInfo = {
@@ -604,8 +660,8 @@ export const restaurantInfo = {
   phone: "(251) 675-3282",
   email: "info@jrodgersbbq.com",
   hours: {
-    monday: "Closed (DoorDash Available)",
-    tuesday: "Closed (DoorDash Available)",
+    monday: "Closed",
+    tuesday: "Closed",
     wednesday: "10:00 AM - 9:00 PM",
     thursday: "10:00 AM - 9:00 PM",
     friday: "10:00 AM - 9:00 PM",
