@@ -97,18 +97,22 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
   const ctTime = new Date(now.getTime() + ctOffsetHours * 60 * 60 * 1000);
   const ctDate = ctTime.toISOString().replace('Z', '');
 
+  // Calculate total from the items we're actually sending (EPOS validates this matches)
+  const itemsTotal = transactionItems.reduce((sum, item) => sum + item.UnitPrice * item.Quantity, 0);
+  const roundedTotal = Math.round(itemsTotal * 100) / 100;
+
   const transaction = {
     DeviceId: DEVICE_ID,
     StaffId: STAFF_ID,
     DateTime: ctDate,
     StatusId: 1, // Completed
     ServiceType: 1, // Takeaway (both pickup and to-go are takeaway)
-    TotalAmount: totalCents / 100,
+    TotalAmount: roundedTotal,
     TransactionItems: transactionItems,
     Tenders: [
       {
         TenderTypeId: TENDER_TYPE_ID,
-        Amount: totalCents / 100
+        Amount: roundedTotal
       }
     ]
   };

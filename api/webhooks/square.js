@@ -3,7 +3,8 @@
  * Orchestrates: fetch order → email customer + restaurant → push to Epos Now.
  */
 import { createHmac } from 'crypto';
-import { sendOrderEmails } from '../lib/email.js';
+import { sendOrderEmails, sendEposFailureAlert } from '../lib/email.js';
+import { pushToEposNow } from '../lib/eposnow.js';
 
 // Disable Vercel body parser so we can verify the webhook signature
 export const config = { api: { bodyParser: false } };
@@ -131,9 +132,9 @@ export default async function handler(req, res) {
     const totalCents = Number(order.totalMoney?.amount || 0);
     const totalDisplay = `$${(totalCents / 100).toFixed(2)}`;
 
-    // Send confirmation emails (EPOS push is handled by cron job separately)
-    try {
-      const emailResult = await sendOrderEmails({
+    // Fan out: email + EPOS push in parallel
+    const [emailResult, posResult] = await Promise.allSettled([
+      sendOrderEmails({
         customerName: customerInfo.name,
         customerPhone: customerInfo.phone,
         customerEmail: customerInfo.email,
@@ -141,10 +142,40 @@ export default async function handler(req, res) {
         orderType: customerInfo.orderType,
         lineItems,
         totalDisplay
-      });
-      console.log('[webhook] Email result:', JSON.stringify(emailResult));
-    } catch (emailErr) {
-      console.error('[webhook] Email error:', emailErr.message);
+      }),
+      pushToEposNow({
+        customerName: customerInfo.name,
+        pickupTime: customerInfo.pickupTime,
+        orderType: customerInfo.orderType,
+        lineItems,
+        totalCents
+      })
+    ]);
+
+    console.log('[webhook] Email result:', emailResult.status, emailResult.status === 'fulfilled' ? JSON.stringify(emailResult.value) : emailResult.reason?.message);
+    console.log('[webhook] POS result:', posResult.status, posResult.status === 'fulfilled' ? JSON.stringify(posResult.value) : posResult.reason?.message);
+
+    // If EPOS push failed, send alert email so staff can enter manually
+    const posFailed = posResult.status === 'rejected' ||
+      (posResult.status === 'fulfilled' && posResult.value && !posResult.value.success && !posResult.value.skipped);
+    if (posFailed) {
+      const errorMsg = posResult.status === 'rejected' ? posResult.reason?.message : posResult.value?.error;
+      console.error(`[webhook] EPOS push failed for order ${orderId}: ${errorMsg}`);
+      try {
+        const itemNames = lineItems.map(li => `${li.quantity}x ${li.name}`).join(', ');
+        await sendEposFailureAlert({
+          orderId,
+          customerName: customerInfo.name,
+          customerPhone: customerInfo.phone,
+          pickupTime: customerInfo.pickupTime,
+          items: itemNames,
+          total: totalDisplay,
+          retries: 1
+        });
+        console.log('[webhook] EPOS failure alert sent');
+      } catch (alertErr) {
+        console.error('[webhook] Failed to send EPOS alert:', alertErr.message);
+      }
     }
 
     return res.status(200).json({ ok: true });
