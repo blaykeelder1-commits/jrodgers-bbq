@@ -213,6 +213,47 @@ export async function sendOrderEmails({ customerName, customerPhone, customerEma
   return results;
 }
 
+/**
+ * Send an alert email when an order fails to push to EPOS after max retries.
+ * Gives staff the info they need to manually enter it.
+ */
+export async function sendEposFailureAlert({ orderId, customerName, customerPhone, pickupTime, items, total, retries }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn('[email] RESEND_API_KEY not configured — cannot send EPOS failure alert');
+    return { success: false, error: 'no api key' };
+  }
+
+  const html = `
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f0f0f0;font-family:sans-serif">
+  <div style="max-width:600px;margin:0 auto;background:#fff">
+    <div style="background:#c41e3a;padding:20px;text-align:center">
+      <h2 style="margin:0;color:#fff;font-size:20px">EPOS Push Failed — Manual Entry Needed</h2>
+    </div>
+    <div style="padding:24px">
+      <p style="font-size:15px;color:#333;margin:0 0 16px">An online order failed to sync to EPOS after ${retries} attempts. Please enter it manually.</p>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+        <tr><td style="padding:8px 0;font-weight:700;color:#666;width:120px">Customer</td><td style="padding:8px 0;color:#333">${escapeHtml(customerName)}</td></tr>
+        <tr><td style="padding:8px 0;font-weight:700;color:#666">Phone</td><td style="padding:8px 0;color:#333">${escapeHtml(customerPhone)}</td></tr>
+        <tr><td style="padding:8px 0;font-weight:700;color:#666">Pickup</td><td style="padding:8px 0;color:#333">${escapeHtml(pickupTime)}</td></tr>
+        <tr><td style="padding:8px 0;font-weight:700;color:#666">Items</td><td style="padding:8px 0;color:#333">${escapeHtml(items)}</td></tr>
+        <tr><td style="padding:8px 0;font-weight:700;color:#666">Total</td><td style="padding:8px 0;color:#c41e3a;font-weight:700;font-size:18px">${escapeHtml(total)}</td></tr>
+      </table>
+      <p style="font-size:12px;color:#999;margin:16px 0 0">Order ID: ${escapeHtml(orderId)}</p>
+    </div>
+  </div>
+</body></html>`;
+
+  return sendEmail(apiKey, {
+    from: FROM_ADDRESS,
+    to: RESTAURANT_EMAIL,
+    subject: `EPOS Alert: Order from ${customerName} needs manual entry`,
+    html
+  });
+}
+
 async function sendEmail(apiKey, { from, to, subject, html }) {
   try {
     const resp = await fetch(RESEND_URL, {

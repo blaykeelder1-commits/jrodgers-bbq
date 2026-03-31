@@ -1,14 +1,22 @@
 /**
- * Cron job: push deferred orders to EPOS Now.
- * Runs every 5 minutes via Vercel Cron.
+ * Cron job: sole EPOS pusher for online orders.
+ * Runs on a schedule (external cron or Vercel Cron) and pushes completed
+ * Square orders to EPOS Now that haven't been pushed yet.
  *
- * Searches Square for orders with epos_push_at metadata where current time >= epos_push_at
- * and epos_sent is not "true". Pushes each to EPOS Now and marks epos_sent: "true".
+ * Safety guarantees:
+ * - Only processes orders where emails_sent="true" (payment confirmed)
+ * - Skips orders where epos_sent="true" (already pushed — no duplicates)
+ * - Max 3 orders per run (stays within Vercel 10s timeout)
+ * - Retry cap of 5 attempts per order (no infinite loops)
+ * - Sends alert email after 5 failures so staff can manually enter the order
  */
 import { pushToEposNow } from '../lib/eposnow.js';
+import { sendEposFailureAlert } from '../lib/email.js';
+
+const MAX_ORDERS_PER_RUN = 3;
+const MAX_RETRIES = 5;
 
 export default async function handler(req, res) {
-  // Vercel Cron sends GET requests; also allow POST for manual triggers
   if (req.method !== 'GET' && req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -28,7 +36,7 @@ export default async function handler(req, res) {
   console.log(`[cron/push-orders] Running at ${now.toISOString()}`);
 
   try {
-    // Search for recent orders (last 24 hours) that might need EPOS push
+    // Search for recent completed orders (last 24 hours)
     const searchStart = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
 
     const searchResponse = await client.orders.search({
@@ -46,39 +54,74 @@ export default async function handler(req, res) {
     });
 
     const orders = searchResponse.orders || [];
-    console.log(`[cron/push-orders] Found ${orders.length} recent orders`);
+
+    // Filter to orders that need EPOS push:
+    // - emails_sent="true" (payment confirmed, webhook processed)
+    // - epos_sent is NOT "true" and NOT "gave_up"
+    const needsPush = orders.filter(order => {
+      const meta = order.metadata || {};
+      return meta.emails_sent === 'true' &&
+             meta.epos_sent !== 'true' &&
+             meta.epos_sent !== 'gave_up';
+    });
+
+    console.log(`[cron/push-orders] ${orders.length} recent orders, ${needsPush.length} need EPOS push`);
+
+    if (needsPush.length === 0) {
+      return res.status(200).json({ ok: true, pushed: 0, skipped: orders.length, failed: 0 });
+    }
 
     let pushed = 0;
-    let skipped = 0;
-    const errors = [];
+    let failed = 0;
+    let gaveUp = 0;
+    const results = [];
 
-    for (const order of orders) {
+    // Process max N orders per run to stay within timeout
+    for (const order of needsPush.slice(0, MAX_ORDERS_PER_RUN)) {
       const meta = order.metadata || {};
+      const retries = parseInt(meta.epos_retries || '0', 10);
 
-      // Skip orders without deferred EPOS push
-      if (!meta.epos_push_at) {
-        skipped++;
+      // If we've hit max retries, give up and alert
+      if (retries >= MAX_RETRIES) {
+        console.error(`[cron/push-orders] Order ${order.id} failed ${retries} times — giving up and alerting`);
+
+        try {
+          // Mark as gave_up
+          const freshOrder = (await client.orders.get({ orderId: order.id })).order;
+          await client.orders.update({
+            orderId: order.id,
+            order: {
+              locationId: process.env.SQUARE_LOCATION_ID,
+              metadata: { ...freshOrder.metadata, epos_sent: 'gave_up' },
+              version: freshOrder.version
+            }
+          });
+
+          // Send alert email to restaurant
+          const totalCents = Number(order.totalMoney?.amount || 0);
+          const itemNames = (order.lineItems || []).map(li => `${li.quantity}x ${li.name}`).join(', ');
+          await sendEposFailureAlert({
+            orderId: order.id,
+            customerName: meta.customer_name || 'Unknown',
+            customerPhone: meta.customer_phone || '',
+            pickupTime: meta.pickup_time || 'ASAP',
+            items: itemNames,
+            total: `$${(totalCents / 100).toFixed(2)}`,
+            retries
+          });
+        } catch (alertErr) {
+          console.error(`[cron/push-orders] Failed to send alert for ${order.id}:`, alertErr.message);
+        }
+
+        gaveUp++;
+        results.push({ orderId: order.id, status: 'gave_up', retries });
         continue;
       }
 
-      // Skip orders already sent to EPOS
-      if (meta.epos_sent === 'true') {
-        skipped++;
-        continue;
-      }
-
-      // Check if it's time to push
-      const pushAt = new Date(meta.epos_push_at);
-      if (now < pushAt) {
-        console.log(`[cron/push-orders] Order ${order.id} — not yet time (push at ${meta.epos_push_at})`);
-        skipped++;
-        continue;
-      }
-
-      console.log(`[cron/push-orders] Pushing order ${order.id} to EPOS (was deferred until ${meta.epos_push_at})`);
+      console.log(`[cron/push-orders] Pushing order ${order.id} (attempt ${retries + 1}/${MAX_RETRIES})`);
 
       try {
-        // Rebuild line items with itemId and selectedSize from metadata
+        // Parse item IDs from metadata
         const sizeMap = { 'S': 'Small', 'M': 'Medium', 'L': 'Large' };
         let parsedItemIds = [];
         let itemIdStr = '';
@@ -115,26 +158,55 @@ export default async function handler(req, res) {
 
         console.log(`[cron/push-orders] EPOS result for ${order.id}:`, JSON.stringify(posResult));
 
-        // Mark as sent in Square metadata
-        const freshOrder = (await client.orders.get({ orderId: order.id })).order;
-        await client.orders.update({
-          orderId: order.id,
-          order: {
-            locationId: process.env.SQUARE_LOCATION_ID,
-            metadata: { ...freshOrder.metadata, epos_sent: 'true' },
-            version: freshOrder.version
-          }
-        });
-
-        pushed++;
+        if (posResult.success || posResult.skipped) {
+          // Success or intentionally skipped (e.g. no EPOS credentials) — mark as done
+          const freshOrder = (await client.orders.get({ orderId: order.id })).order;
+          await client.orders.update({
+            orderId: order.id,
+            order: {
+              locationId: process.env.SQUARE_LOCATION_ID,
+              metadata: { ...freshOrder.metadata, epos_sent: 'true' },
+              version: freshOrder.version
+            }
+          });
+          pushed++;
+          results.push({ orderId: order.id, status: 'pushed' });
+        } else {
+          // EPOS returned an error — increment retry counter
+          const freshOrder = (await client.orders.get({ orderId: order.id })).order;
+          await client.orders.update({
+            orderId: order.id,
+            order: {
+              locationId: process.env.SQUARE_LOCATION_ID,
+              metadata: { ...freshOrder.metadata, epos_retries: String(retries + 1) },
+              version: freshOrder.version
+            }
+          });
+          failed++;
+          results.push({ orderId: order.id, status: 'failed', error: posResult.error, attempt: retries + 1 });
+        }
       } catch (orderErr) {
-        console.error(`[cron/push-orders] Error pushing order ${order.id}:`, orderErr.message);
-        errors.push({ orderId: order.id, error: orderErr.message });
+        console.error(`[cron/push-orders] Error processing order ${order.id}:`, orderErr.message);
+        // Increment retry counter even on unexpected errors
+        try {
+          const freshOrder = (await client.orders.get({ orderId: order.id })).order;
+          await client.orders.update({
+            orderId: order.id,
+            order: {
+              locationId: process.env.SQUARE_LOCATION_ID,
+              metadata: { ...freshOrder.metadata, epos_retries: String(retries + 1) },
+              version: freshOrder.version
+            }
+          });
+        } catch { /* best effort */ }
+        failed++;
+        results.push({ orderId: order.id, status: 'error', error: orderErr.message });
       }
     }
 
-    console.log(`[cron/push-orders] Done: ${pushed} pushed, ${skipped} skipped, ${errors.length} errors`);
-    return res.status(200).json({ ok: true, pushed, skipped, errors });
+    const remaining = Math.max(0, needsPush.length - MAX_ORDERS_PER_RUN);
+    console.log(`[cron/push-orders] Done: ${pushed} pushed, ${failed} failed, ${gaveUp} gave_up, ${remaining} remaining`);
+    return res.status(200).json({ ok: true, pushed, failed, gaveUp, remaining, results });
   } catch (err) {
     console.error('[cron/push-orders] Fatal error:', err.message);
     return res.status(500).json({ error: err.message });

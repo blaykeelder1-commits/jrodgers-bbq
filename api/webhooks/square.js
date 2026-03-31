@@ -4,7 +4,6 @@
  */
 import { createHmac } from 'crypto';
 import { sendOrderEmails } from '../lib/email.js';
-import { pushToEposNow } from '../lib/eposnow.js';
 
 // Disable Vercel body parser so we can verify the webhook signature
 export const config = { api: { bodyParser: false } };
@@ -132,9 +131,9 @@ export default async function handler(req, res) {
     const totalCents = Number(order.totalMoney?.amount || 0);
     const totalDisplay = `$${(totalCents / 100).toFixed(2)}`;
 
-    // Fan out: email + POS push in parallel (always push immediately)
-    const [emailResult, posResult] = await Promise.allSettled([
-      sendOrderEmails({
+    // Send confirmation emails (EPOS push is handled by cron job separately)
+    try {
+      const emailResult = await sendOrderEmails({
         customerName: customerInfo.name,
         customerPhone: customerInfo.phone,
         customerEmail: customerInfo.email,
@@ -142,18 +141,11 @@ export default async function handler(req, res) {
         orderType: customerInfo.orderType,
         lineItems,
         totalDisplay
-      }),
-      pushToEposNow({
-        customerName: customerInfo.name,
-        pickupTime: customerInfo.pickupTime,
-        orderType: customerInfo.orderType,
-        lineItems,
-        totalCents
-      })
-    ]);
-
-    console.log('[webhook] Email result:', emailResult.status, emailResult.status === 'fulfilled' ? JSON.stringify(emailResult.value) : emailResult.reason?.message);
-    console.log('[webhook] POS result:', posResult.status, posResult.status === 'fulfilled' ? JSON.stringify(posResult.value) : posResult.reason?.message);
+      });
+      console.log('[webhook] Email result:', JSON.stringify(emailResult));
+    } catch (emailErr) {
+      console.error('[webhook] Email error:', emailErr.message);
+    }
 
     return res.status(200).json({ ok: true });
   } catch (err) {
