@@ -45,8 +45,10 @@ function Order() {
   const [editingItem, setEditingItem] = useState(null);
 
   const TAX_RATE = 0.10;
+  const SURCHARGE_RATE = 0.03;
   const taxAmount = cartTotal * TAX_RATE;
-  const orderTotal = cartTotal + taxAmount;
+  const surchargeAmount = cartTotal * SURCHARGE_RATE;
+  const orderTotal = cartTotal + taxAmount + surchargeAmount;
   const belowMinimum = items.length > 0 && cartTotal < MIN_ORDER_AMOUNT;
 
   // Load last order for "Order Again"
@@ -211,6 +213,7 @@ function Order() {
       orderType,
       subtotal: cartTotal,
       tax: taxAmount,
+      surcharge: surchargeAmount,
       total: orderTotal,
       timestamp: new Date().toISOString()
     };
@@ -227,6 +230,7 @@ function Order() {
           orderType,
           subtotal: cartTotal,
           tax: taxAmount,
+          surcharge: surchargeAmount,
           total: orderTotal
         })
       });
@@ -267,14 +271,6 @@ function Order() {
               <div>
                 <strong>We're currently closed.</strong> Open Wed–Sat 10AM–9PM, Sun 11AM–5PM.
                 Place your order now and select a pickup time!
-                {status.isDoorDashDay && (
-                  <span className="doordash-note">
-                    {' '}DoorDash delivery is available today!{' '}
-                    <a href="https://www.doordash.com" target="_blank" rel="noopener noreferrer">
-                      Order on DoorDash
-                    </a>
-                  </span>
-                )}
               </div>
             </div>
           )}
@@ -568,6 +564,17 @@ function Order() {
                           <p><strong>Order Type:</strong> {orderType === 'pickup' ? 'Pickup' : 'To-Go'}</p>
                         </div>
 
+                        <div className="surcharge-notice">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                          </svg>
+                          <div>
+                            A 3% credit card processing fee (${surchargeAmount.toFixed(2)}) is included in your total. Pay in-store with cash or debit to avoid this fee.
+                          </div>
+                        </div>
+
                         <div className="payment-info">
                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -651,10 +658,17 @@ function Order() {
                         <span>Tax</span>
                         <span>${taxAmount.toFixed(2)}</span>
                       </div>
+                      <div className="summary-line">
+                        <span>CC Surcharge (3%)</span>
+                        <span>${surchargeAmount.toFixed(2)}</span>
+                      </div>
                       <div className="summary-line total">
                         <span>Total</span>
                         <span>${orderTotal.toFixed(2)}</span>
                       </div>
+                      <p className="summary-surcharge-note">
+                        A 3% surcharge applies to all credit card transactions. Pay in-store with cash or debit to avoid this fee.
+                      </p>
                     </div>
                     {pickupTime && (
                       <div className="pickup-info">

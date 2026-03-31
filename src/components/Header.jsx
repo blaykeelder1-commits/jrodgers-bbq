@@ -7,7 +7,8 @@ const announcements = [
   'Welcome Home — Authentic BBQ & Soul Food',
   'Open Wed-Sat 10AM-9PM, Sun 11AM-5PM | Order Online & Skip the Wait!',
   'Now Accepting Online Orders for Pickup',
-  'Catering Available — Let Us Feed Your Next Event!'
+  'Catering Available — Let Us Feed Your Next Event!',
+  'A 3% processing fee applies to credit card payments. Pay with cash or debit to avoid it.'
 ];
 
 function Header() {

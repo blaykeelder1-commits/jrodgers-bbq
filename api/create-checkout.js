@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       environment: SquareEnvironment.Production
     });
 
-    const { items, customerInfo, pickupTime, orderType } = req.body;
+    const { items, customerInfo, pickupTime, orderType, subtotal } = req.body;
 
     if (!items || !items.length || !customerInfo?.name || !customerInfo?.phone) {
       return res.status(400).json({ error: 'Missing required order information' });
@@ -52,6 +52,20 @@ export default async function handler(req, res) {
         }
       };
     });
+
+    // Add credit card surcharge as a separate line item
+    const itemSubtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const surchargeAmount = Math.round(itemSubtotal * 0.03 * 100);
+    if (surchargeAmount > 0) {
+      lineItems.push({
+        name: 'Credit Card Surcharge (3%)',
+        quantity: '1',
+        basePriceMoney: {
+          amount: BigInt(surchargeAmount),
+          currency: 'USD'
+        }
+      });
+    }
 
     // Build compact item ID string for EPOS integration
     // Format: "itemId:size,itemId:size,..." — fits within Square's 60-char metadata limit

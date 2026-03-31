@@ -586,6 +586,34 @@
   color: var(--color-text-muted);
 }
 
+/* Surcharge Notice */
+.surcharge-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: #E3F2FD;
+  border: 1px solid #1976D2;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.surcharge-notice svg {
+  flex-shrink: 0;
+  color: #1976D2;
+  margin-top: 2px;
+}
+
+.summary-surcharge-note {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-sm);
+  line-height: 1.4;
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
   .order-progress {
