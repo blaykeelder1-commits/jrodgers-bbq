@@ -13,14 +13,14 @@ function isWithinTimeRange(timeRestricted) {
 
 function Menu() {
   usePageTitle('Menu');
-  const [activeCategory, setActiveCategory] = useState(menuCategories[0].id);
+  const [expandedCategory, setExpandedCategory] = useState(menuCategories[0].id);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const [currentHour, setCurrentHour] = useState(new Date().getHours());
 
   useEffect(() => {
-    // Handle hash navigation
     const hash = window.location.hash.slice(1);
     if (hash && menuCategories.find(c => c.id === hash)) {
-      setActiveCategory(hash);
+      setExpandedCategory(hash);
       setTimeout(() => {
         const element = document.getElementById(hash);
         if (element) {
@@ -30,7 +30,6 @@ function Menu() {
     }
   }, []);
 
-  // Re-check time every minute for lunch special availability
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentHour(new Date().getHours());
@@ -38,24 +37,31 @@ function Menu() {
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToCategory = (categoryId) => {
-    setActiveCategory(categoryId);
-    const element = document.getElementById(categoryId);
-    if (element) {
-      const headerOffset = 150;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+  const toggleCategory = (categoryId) => {
+    const isExpanding = expandedCategory !== categoryId;
+    setExpandedCategory(isExpanding ? categoryId : null);
+
+    if (isExpanding) {
+      setTimeout(() => {
+        const element = document.getElementById(categoryId);
+        if (element) {
+          const headerOffset = 150;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }
+      }, 50);
     }
   };
 
   return (
     <div className="menu-page">
-      {/* Page Header */}
       <div className="menu-header">
         <div className="container">
           <h1>Our Menu</h1>
@@ -63,14 +69,13 @@ function Menu() {
         </div>
       </div>
 
-      {/* Category Navigation */}
       <nav className="menu-nav">
         <div className="menu-nav-container">
           {menuCategories.map((category) => (
             <button
               key={category.id}
-              className={`menu-nav-btn ${activeCategory === category.id ? 'active' : ''}`}
-              onClick={() => scrollToCategory(category.id)}
+              className={`menu-nav-btn ${expandedCategory === category.id ? 'active' : ''}`}
+              onClick={() => toggleCategory(category.id)}
             >
               {category.name}
             </button>
@@ -78,31 +83,50 @@ function Menu() {
         </div>
       </nav>
 
-      {/* Menu Content */}
       <div className="menu-content">
         <div className="container">
           {menuCategories.map((category) => {
             const categoryUnavailable = category.timeRestricted && !isWithinTimeRange(category.timeRestricted);
+            const isExpanded = expandedCategory === category.id;
             return (
               <section
                 key={category.id}
                 id={category.id}
-                className="menu-category"
+                className={`menu-category ${isExpanded ? 'menu-category--expanded' : ''}`}
               >
-                <div className="category-header">
-                  <h2>{category.name}</h2>
-                  {category.description && (
-                    <p className="category-description">{category.description}</p>
-                  )}
+                <div
+                  className="category-header"
+                  onClick={() => toggleCategory(category.id)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleCategory(category.id); }}
+                >
+                  <div className="category-header-text">
+                    <h2>{category.name}</h2>
+                    {category.description && (
+                      <p className="category-description">{category.description}</p>
+                    )}
+                  </div>
+                  <span className="category-header-count">{category.items.length} items</span>
+                  <svg
+                    className={`category-chevron ${isExpanded ? 'category-chevron--open' : ''}`}
+                    width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
                 </div>
-                <div className="menu-grid">
-                  {category.items.map((item) => (
-                    <MenuCard
-                      key={item.id}
-                      item={item}
-                      unavailable={categoryUnavailable}
-                    />
-                  ))}
+                <div className={`menu-category-items ${isExpanded ? 'expanded' : ''}`}>
+                  <div className={`menu-grid ${isMobile ? 'menu-grid--compact' : ''}`}>
+                    {category.items.map((item) => (
+                      <MenuCard
+                        key={item.id}
+                        item={item}
+                        unavailable={categoryUnavailable}
+                        compact={isMobile}
+                      />
+                    ))}
+                  </div>
                 </div>
               </section>
             );

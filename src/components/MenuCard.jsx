@@ -4,7 +4,7 @@ import { useToast } from '../context/ToastContext';
 import CustomizeModal from './CustomizeModal';
 import './MenuCard.css';
 
-function MenuCard({ item, showAddButton = true, unavailable = false }) {
+function MenuCard({ item, showAddButton = true, unavailable = false, compact = false }) {
   const { addItem } = useCart();
   const { showToast } = useToast();
   const [showCustomize, setShowCustomize] = useState(false);
@@ -50,7 +50,7 @@ function MenuCard({ item, showAddButton = true, unavailable = false }) {
 
   return (
     <>
-      <div className={`menu-card${unavailable ? ' menu-card--unavailable' : ''}`}>
+      <div className={`menu-card${compact ? ' compact' : ''}${unavailable ? ' menu-card--unavailable' : ''}`}>
         <div className="menu-card-image">
           <img src={item.image} alt={item.name} loading="lazy" />
         </div>
