@@ -26,8 +26,25 @@ export default async function handler(req, res) {
       return null;
     };
 
-    // Build line items for Square — include customizations in the name
-    const lineItems = items.map(item => {
+    // Map side display names to menu item IDs for EPOS product resolution
+    const sideNameToId = {
+      'Yo-Jo Beans': 'side-beans',
+      'Cole Slaw': 'side-slaw',
+      'Potato Salad': 'side-potato',
+      'French Fries': 'side-fries',
+      'Mac and Cheese': 'side-mac',
+      'Collard Greens': 'side-greens',
+      'Candied Yams': 'side-yams',
+      'Cabbage': 'side-cabbage',
+    };
+
+    // Build line items for Square and EPOS metadata in a single pass.
+    // Included sides (from dinners/combos) become separate $0 line items
+    // so the EPOS pipeline can resolve each side to its own product.
+    const lineItems = [];
+    const itemIdParts = [];
+
+    for (const item of items) {
       let displayName = item.name;
       const details = [];
       if (item.selectedMeats && item.selectedMeats.length) {
@@ -43,15 +60,34 @@ export default async function handler(req, res) {
         displayName += ` (${details.join(' | ')})`;
       }
 
-      return {
+      lineItems.push({
         name: displayName,
         quantity: String(item.quantity),
         basePriceMoney: {
           amount: BigInt(Math.round(item.price * 100)),
           currency: 'USD'
         }
-      };
-    });
+      });
+
+      const id = item.itemId || '?';
+      const size = item.selectedSize ? `:${item.selectedSize[0]}` : '';
+      itemIdParts.push(`${id}${size}`);
+
+      // Add each included side as a separate $0 line item for EPOS
+      if (item.selectedSides && item.selectedSides.length) {
+        for (const sideName of item.selectedSides) {
+          const sideId = sideNameToId[sideName];
+          if (sideId) {
+            lineItems.push({
+              name: `${sideName} (included)`,
+              quantity: String(item.quantity),
+              basePriceMoney: { amount: BigInt(0), currency: 'USD' }
+            });
+            itemIdParts.push(`${sideId}:S`);
+          }
+        }
+      }
+    }
 
     // Add credit card surcharge as a separate line item
     const itemSubtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -70,11 +106,6 @@ export default async function handler(req, res) {
     // Build compact item ID string for EPOS integration
     // Format: "itemId:size,itemId:size,..." — fits within Square's 60-char metadata limit
     // Split across multiple metadata keys if needed (item_ids_0, item_ids_1, etc.)
-    const itemIdParts = items.map(item => {
-      const id = item.itemId || '?';
-      const size = item.selectedSize ? `:${item.selectedSize[0]}` : '';
-      return `${id}${size}`;
-    });
     const itemIdStr = itemIdParts.join(',');
     // Split into 60-char chunks for Square metadata
     const itemIdChunks = {};
