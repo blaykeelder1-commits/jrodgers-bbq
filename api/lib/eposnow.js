@@ -59,9 +59,9 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
       // "Rib Dinner (Sides: Yo-Jo Beans, Cole Slaw | Note: extra sauce)"
       const customMatch = li.name.match(/\((.+)\)$/);
       if (customMatch) {
-        item.Notes = customMatch[1];
+        item.Notes = customMatch[1].substring(0, 80);
       }
-      if (li.notes) item.Notes = li.notes;
+      if (li.notes) item.Notes = li.notes.substring(0, 80);
       transactionItems.push(item);
     } else {
       // Track unmapped items — still include as notes so kitchen knows
@@ -75,24 +75,22 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
     return { skipped: true, reason: 'no items' };
   }
 
-  // Build order-level note for kitchen (attached to first item)
-  const notesParts = [
-    'ONLINE ORDER',
-    customerName,
-    `Pickup: ${pickupTime}`,
-    orderType === 'to-go' ? 'TO-GO' : 'PICKUP'
-  ];
-  if (unmappedItems.length > 0) {
-    notesParts.push(`ALSO: ${unmappedItems.join(', ')}`);
-  }
+  // Build compact order header for kitchen (EPOS Notes max 80 chars)
+  const firstName = customerName.split(' ')[0];
+  const shortTime = pickupTime.replace(':00 ', ' ');
+  const typeTag = orderType === 'to-go' ? 'TG' : 'PU';
+  const orderHeader = `OL:${firstName} ${shortTime} ${typeTag}`;
 
-  // Attach order note to first item, preserving any existing item-level notes (sides/meats)
+  // Attach order header to first item, but only if it fits alongside existing notes.
+  // Sides/meats take priority — never truncate customization to fit the header.
   if (transactionItems.length > 0) {
-    const orderNote = notesParts.join(' | ').substring(0, 250);
     const existing = transactionItems[0].Notes;
-    transactionItems[0].Notes = existing
-      ? `${orderNote} || ${existing}`
-      : orderNote;
+    if (!existing) {
+      transactionItems[0].Notes = orderHeader;
+    } else {
+      const combined = `${orderHeader}|${existing}`;
+      transactionItems[0].Notes = combined.length <= 80 ? combined : existing;
+    }
   }
 
   // Send Central Time (Alabama) so EPOS receipt shows correct local time
