@@ -106,19 +106,19 @@ export const eposSizedProductMap = {
     'Large':  35550325, // Mac and Cheese (large) — $11.99
   },
   'side-greens': {
-    'Small':  null, // Collard Greens (small) — $6.99
-    'Medium': null, // Collard Greens (medium) — $7.99
-    'Large':  null, // Collard Greens (large) — $11.99
+    'Small':  36162376, // Greens (small) — $6.49
+    'Medium': 36162382, // Greens (medium) — $7.89
+    'Large':  36162404, // Greens (large) — $11.24
   },
   'side-yams': {
-    'Small':  null, // Candied Yams (small) — $6.99
-    'Medium': null, // Candied Yams (medium) — $7.99
-    'Large':  null, // Candied Yams (large) — $11.99
+    'Small':  39096845, // YAMS (SMALL) — $6.49
+    'Medium': 39096928, // YAMS (MEDIUM) — $7.89
+    'Large':  39096858, // YAMS (LARGE) — $11.24
   },
   'side-cabbage': {
-    'Small':  null, // Cabbage (small) — $6.99
-    'Medium': null, // Cabbage (medium) — $7.99
-    'Large':  null, // Cabbage (large) — $11.99
+    'Small':  39160147, // Cabbage (SMALL) — $6.49
+    'Medium': null, // Cabbage (medium) — not in EPOS yet
+    'Large':  null, // Cabbage (large) — not in EPOS yet
   },
 
   // === Desserts (sized) ===

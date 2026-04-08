@@ -45,6 +45,9 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
   const unmappedItems = [];
 
   for (const li of lineItems) {
+    // Skip $0 included sides — their names are captured in the parent item's display name
+    if (li.unitPriceCents === 0) continue;
+
     const productId = resolveProductId(li);
     if (productId) {
       const item = {
@@ -52,11 +55,17 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
         Quantity: li.quantity,
         UnitPrice: li.unitPriceCents / 100
       };
+      // Parse customization details from display name, e.g.
+      // "Rib Dinner (Sides: Yo-Jo Beans, Cole Slaw | Note: extra sauce)"
+      const customMatch = li.name.match(/\((.+)\)$/);
+      if (customMatch) {
+        item.Notes = customMatch[1];
+      }
       if (li.notes) item.Notes = li.notes;
       transactionItems.push(item);
     } else {
       // Track unmapped items — still include as notes so kitchen knows
-      unmappedItems.push(`${li.quantity}x ${li.name} ($${(li.unitPriceCents / 100).toFixed(2)})`);
+      unmappedItems.push(`${li.quantity}x ${li.name}`);
     }
   }
 
@@ -66,21 +75,24 @@ export async function pushToEposNow({ customerName, pickupTime, orderType, lineI
     return { skipped: true, reason: 'no items' };
   }
 
-  // Build order notes for kitchen
+  // Build order-level note for kitchen (attached to first item)
   const notesParts = [
     'ONLINE ORDER',
     customerName,
     `Pickup: ${pickupTime}`,
-    'TO-GO'
+    orderType === 'to-go' ? 'TO-GO' : 'PICKUP'
   ];
   if (unmappedItems.length > 0) {
     notesParts.push(`ALSO: ${unmappedItems.join(', ')}`);
   }
 
-  // Add notes to the first transaction item so kitchen sees it
+  // Attach order note to first item, preserving any existing item-level notes (sides/meats)
   if (transactionItems.length > 0) {
-    const orderNote = notesParts.join(' | ').substring(0, 80);
-    transactionItems[0].Notes = orderNote;
+    const orderNote = notesParts.join(' | ').substring(0, 250);
+    const existing = transactionItems[0].Notes;
+    transactionItems[0].Notes = existing
+      ? `${orderNote} || ${existing}`
+      : orderNote;
   }
 
   // Send Central Time (Alabama) so EPOS receipt shows correct local time

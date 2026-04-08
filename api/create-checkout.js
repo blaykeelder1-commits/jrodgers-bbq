@@ -26,21 +26,9 @@ export default async function handler(req, res) {
       return null;
     };
 
-    // Map side display names to menu item IDs for EPOS product resolution
-    const sideNameToId = {
-      'Yo-Jo Beans': 'side-beans',
-      'Cole Slaw': 'side-slaw',
-      'Potato Salad': 'side-potato',
-      'French Fries': 'side-fries',
-      'Mac and Cheese': 'side-mac',
-      'Collard Greens': 'side-greens',
-      'Candied Yams': 'side-yams',
-      'Cabbage': 'side-cabbage',
-    };
-
     // Build line items for Square and EPOS metadata in a single pass.
-    // Included sides (from dinners/combos) become separate $0 line items
-    // so the EPOS pipeline can resolve each side to its own product.
+    // Side/meat selections are encoded in each item's display name
+    // (e.g., "Rib Dinner (Sides: Yo-Jo Beans, Cole Slaw)") — EPOS parses them from there.
     const lineItems = [];
     const itemIdParts = [];
 
@@ -72,21 +60,6 @@ export default async function handler(req, res) {
       const id = item.itemId || '?';
       const size = item.selectedSize ? `:${item.selectedSize[0]}` : '';
       itemIdParts.push(`${id}${size}`);
-
-      // Add each included side as a separate $0 line item for EPOS
-      if (item.selectedSides && item.selectedSides.length) {
-        for (const sideName of item.selectedSides) {
-          const sideId = sideNameToId[sideName];
-          if (sideId) {
-            lineItems.push({
-              name: `${sideName} (included)`,
-              quantity: String(item.quantity),
-              basePriceMoney: { amount: BigInt(0), currency: 'USD' }
-            });
-            itemIdParts.push(`${sideId}:S`);
-          }
-        }
-      }
     }
 
     // Add credit card surcharge as a separate line item

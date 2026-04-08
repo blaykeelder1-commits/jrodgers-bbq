@@ -155,6 +155,25 @@ export default async function handler(req, res) {
     console.log('[webhook] Email result:', emailResult.status, emailResult.status === 'fulfilled' ? JSON.stringify(emailResult.value) : emailResult.reason?.message);
     console.log('[webhook] POS result:', posResult.status, posResult.status === 'fulfilled' ? JSON.stringify(posResult.value) : posResult.reason?.message);
 
+    // Mark epos_sent on success so cron doesn't re-push
+    const posSucceeded = posResult.status === 'fulfilled' &&
+      posResult.value && (posResult.value.success || posResult.value.skipped);
+    if (posSucceeded) {
+      try {
+        const freshOrder = (await client.orders.get({ orderId })).order;
+        await client.orders.update({
+          orderId,
+          order: {
+            locationId: process.env.SQUARE_LOCATION_ID,
+            metadata: { ...freshOrder.metadata, epos_sent: 'true' },
+            version: freshOrder.version
+          }
+        });
+      } catch (eposUpdateErr) {
+        console.warn('[webhook] Failed to set epos_sent flag:', eposUpdateErr.message);
+      }
+    }
+
     // If EPOS push failed, send alert email so staff can enter manually
     const posFailed = posResult.status === 'rejected' ||
       (posResult.status === 'fulfilled' && posResult.value && !posResult.value.success && !posResult.value.skipped);
