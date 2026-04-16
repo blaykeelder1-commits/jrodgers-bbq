@@ -7,6 +7,7 @@ const announcements = [
   'Welcome Home — Authentic BBQ & Soul Food',
   'Open Wed-Sat 10AM-9PM, Sun 11AM-5PM | Order Online & Skip the Wait!',
   'Now Accepting Online Orders for Pickup',
+  'Check Out Our Specials — BOGO Pulled Pork, 25% Off Knuckle Ends & More!',
   'Catering Available — Let Us Feed Your Next Event!',
   'A 3% processing fee applies to credit card payments. Pay with cash or debit to avoid it.'
 ];
@@ -71,6 +72,13 @@ function Header() {
             onClick={closeMobileMenu}
           >
             Menu
+          </NavLink>
+          <NavLink
+            to="/specials"
+            className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+            onClick={closeMobileMenu}
+          >
+            Specials
           </NavLink>
           <NavLink
             to="/order"

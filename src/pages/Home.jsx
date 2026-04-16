@@ -105,6 +105,35 @@ function Home() {
         </div>
       </section>
 
+      {/* Specials Teaser */}
+      <section className="section specials-teaser-section">
+        <div className="container">
+          <h2 className="section-title">Deals & Specials</h2>
+          <div className="specials-teaser-grid">
+            <div className="specials-teaser-card">
+              <span className="specials-teaser-badge">Limited Time</span>
+              <h3>BOGO Pulled Pork Sandwich</h3>
+              <p>Buy one, get one free on our slow-smoked pulled pork sandwich.</p>
+            </div>
+            <div className="specials-teaser-card">
+              <span className="specials-teaser-badge">Wed & Thu</span>
+              <h3>25% Off Knuckle Ends</h3>
+              <p>Every Wednesday & Thursday, save on our tender, smoky knuckle ends.</p>
+            </div>
+            <div className="specials-teaser-card">
+              <span className="specials-teaser-badge">New</span>
+              <h3>Delivery on Mon & Tue</h3>
+              <p>Now on DoorDash, Grubhub & Uber Eats every Monday and Tuesday.</p>
+            </div>
+          </div>
+          <div className="specials-teaser-cta">
+            <Link to="/specials" className="btn btn-primary">
+              View All Specials
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Items Section */}
       <section className="section featured-section">
         <div className="container">

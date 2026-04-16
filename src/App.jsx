@@ -10,6 +10,7 @@ import Order from './pages/Order';
 import Catering from './pages/Catering';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
+import Specials from './pages/Specials';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import NotFound from './pages/NotFound';
 import OrderConfirmation from './pages/OrderConfirmation';
@@ -30,6 +31,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/menu" element={<Menu />} />
+                <Route path="/specials" element={<Specials />} />
                 <Route path="/order" element={<Order />} />
                 <Route path="/catering" element={<Catering />} />
                 <Route path="/gallery" element={<Gallery />} />
