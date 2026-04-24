@@ -1,5 +1,8 @@
 const sideOptions = ['Yo-Jo Beans', 'Cole Slaw', 'Potato Salad', 'French Fries', 'Mac and Cheese', 'Collard Greens', 'Candied Yams', 'Cabbage'];
 
+export const PREMIUM_SIDE_UPCHARGE = 1.75;
+export const PREMIUM_SIDES = new Set(['Mac and Cheese', 'Collard Greens', 'Candied Yams', 'Cabbage']);
+
 export const menuCategories = [
   {
     id: 'buffet',
@@ -268,7 +271,8 @@ export const menuCategories = [
         name: '1lb Of Pulled Pork',
         description: 'A full pound of our tender pulled pork',
         price: 17.99,
-        image: '/images/menu/pulled-pork.jpg'
+        image: '/images/menu/pulled-pork.jpg',
+        bogo: 'Buy One Pound, Get One Free'
       },
       {
         id: 'pork-dinner',

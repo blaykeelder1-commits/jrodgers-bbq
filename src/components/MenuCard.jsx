@@ -30,7 +30,7 @@ function MenuCard({ item, showAddButton = true, unavailable = false, compact = f
   };
 
   const handleCustomizeAdd = (selections) => {
-    const price = selections.sizePrice || item.price;
+    const price = (selections.sizePrice || item.price) + (selections.sidesUpcharge || 0);
     const name = selections.selectedSize
       ? `${item.name} (${selections.selectedSize})`
       : item.name;

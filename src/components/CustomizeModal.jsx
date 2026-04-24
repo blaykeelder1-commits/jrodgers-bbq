@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { PREMIUM_SIDES, PREMIUM_SIDE_UPCHARGE } from '../data/menuData';
 import './CustomizeModal.css';
 
 function CustomizeModal({ item, onAdd, onClose, initialSelections }) {
@@ -24,10 +25,15 @@ function CustomizeModal({ item, onAdd, onClose, initialSelections }) {
   const sizeComplete = !sizeConfig || selectedSize !== null;
   const canAdd = sidesComplete && meatsComplete && sizeComplete;
 
-  // Determine displayed price — use selected size price if applicable
-  const displayPrice = selectedSize !== null && sizeConfig
+  // Premium-side upcharge: $1.75 per premium side when chosen as an included side on a combo/plate.
+  const sidesUpcharge = sidesConfig
+    ? selectedSides.filter((s) => PREMIUM_SIDES.has(s)).length * PREMIUM_SIDE_UPCHARGE
+    : 0;
+
+  const basePrice = selectedSize !== null && sizeConfig
     ? sizeConfig.options[selectedSize].price
     : item.price;
+  const displayPrice = basePrice + sidesUpcharge;
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -65,6 +71,7 @@ function CustomizeModal({ item, onAdd, onClose, initialSelections }) {
       selectedMeats: meatsConfig ? selectedMeats : undefined,
       selectedSize: sizeOption ? sizeOption.label : undefined,
       sizePrice: sizeOption ? sizeOption.price : undefined,
+      sidesUpcharge: sidesUpcharge || undefined,
       specialInstructions: specialInstructions.trim() || undefined,
     });
   };
@@ -167,7 +174,10 @@ function CustomizeModal({ item, onAdd, onClose, initialSelections }) {
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                   )}
-                  {side}
+                  <span className="customize-option__label">{side}</span>
+                  {PREMIUM_SIDES.has(side) && (
+                    <span className="customize-option__upcharge">+${PREMIUM_SIDE_UPCHARGE.toFixed(2)}</span>
+                  )}
                 </button>
               ))}
             </div>

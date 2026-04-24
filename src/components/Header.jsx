@@ -6,8 +6,11 @@ import './Header.css';
 const announcements = [
   'Welcome Home — Authentic BBQ & Soul Food',
   'Open Wed-Sat 10AM-9PM, Sun 11AM-5PM | Order Online & Skip the Wait!',
-  'Now Accepting Online Orders for Pickup',
-  'Check Out Our Specials — BOGO Pulled Pork, 25% Off Knuckle Ends & More!',
+  'Pulled Pork Combo Special — Get a Free Pulled Pork Sandwich!',
+  'BOGO — Buy a Pound of Pulled Pork, Get a Pound Free',
+  'Kids Eat Wednesdays 2–6 PM — $1.99 Pulled Pork Sandwich',
+  'College & High School Students — 10% Off Lunch, Mon–Fri',
+  '25% Off Knuckle Ends Every Wed & Thu — Check Specials Page!',
   'Catering Available — Let Us Feed Your Next Event!',
   'A 3% processing fee applies to credit card payments. Pay with cash or debit to avoid it.'
 ];

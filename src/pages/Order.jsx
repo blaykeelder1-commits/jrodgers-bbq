@@ -86,7 +86,9 @@ function Order() {
   };
 
   const handleEditSave = (selections) => {
-    const price = selections.sizePrice || editingItem.price;
+    const config = getItemConfig(editingItem.id);
+    const basePrice = selections.sizePrice || config?.price || editingItem.price;
+    const price = basePrice + (selections.sidesUpcharge || 0);
     const baseName = editingItem.name.replace(/\s*\((?:Small|Medium|Large)\)$/, '');
     const name = selections.selectedSize
       ? `${baseName} (${selections.selectedSize})`

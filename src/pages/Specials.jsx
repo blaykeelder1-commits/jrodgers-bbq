@@ -4,15 +4,67 @@ import './Specials.css';
 
 const specials = [
   {
-    id: 'bogo-pulled-pork',
+    id: 'pulled-pork-combo',
     badge: 'Limited Time',
-    title: 'Buy One, Get One Free Pulled Pork Sandwich',
-    description: 'Grab a friend and double up on our slow-smoked pulled pork sandwich. Buy one at full price, get the second one on us. Our pulled pork is smoked low and slow for hours, piled high, and served on a toasted bun.',
+    title: 'Pulled Pork Combo Special — Free Sandwich',
+    description: 'Order our Pulled Pork Sandwich Combo (sandwich + 2 sides + tea) and we\'ll throw in a second Pulled Pork Sandwich on the house. Slow-smoked all day, piled high on a toasted bun.',
     cta: { text: 'Order Now', to: '/order' },
     icon: (
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 12H4" /><path d="M20 6H4" /><path d="M20 18H4" />
         <circle cx="12" cy="12" r="10" />
+      </svg>
+    )
+  },
+  {
+    id: 'bogo-pulled-pork-pound',
+    badge: 'Limited Time',
+    title: 'BOGO — Pound of Pulled Pork',
+    description: 'Buy one full pound of our slow-smoked Evans pulled pork, get a second pound free. Feeds the whole table and then some.',
+    cta: { text: 'Order Now', to: '/order' },
+    icon: (
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v10M8 12h8" />
+      </svg>
+    )
+  },
+  {
+    id: 'kids-pulled-pork-wed',
+    badge: 'Wednesdays 2-6 PM',
+    title: 'Kids Eat — $1.99 Pulled Pork Sandwich',
+    description: 'Bring the kids in on Wednesday between 2 and 6 PM and they eat a Pulled Pork Sandwich for just $1.99. One per child, dine-in only.',
+    schedule: 'Available Wednesdays, 2 PM – 6 PM • Dine-In Only',
+    icon: (
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="7" r="4" />
+        <path d="M5 22v-4a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v4" />
+      </svg>
+    )
+  },
+  {
+    id: 'college-lunch-discount',
+    badge: 'Weekdays — Lunch',
+    title: 'College Students — 10% Off Lunch',
+    description: 'Show your valid college ID at the counter on weekdays during lunch (10 AM – 2 PM) and take 10% off your order. Not valid Saturday or Sunday.',
+    schedule: 'Mon–Fri, 10 AM – 2 PM • Valid College ID Required',
+    icon: (
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 10L12 4 2 10l10 6 10-6z" />
+        <path d="M6 12v5a6 6 0 0 0 12 0v-5" />
+      </svg>
+    )
+  },
+  {
+    id: 'highschool-lunch-discount',
+    badge: 'Weekdays — Lunch',
+    title: 'Local High Schoolers — 10% Off Lunch',
+    description: 'Saraland-area high school students get 10% off lunch with a valid student ID. Mon–Fri during lunch hours only. Show your ID at the counter.',
+    schedule: 'Mon–Fri, 10 AM – 2 PM • Valid Student ID Required',
+    icon: (
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5V4.5A2.5 2.5 0 0 1 6.5 2z" />
       </svg>
     )
   },
