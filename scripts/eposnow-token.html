@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head><title>Epos Now API Token Generator</title>
+<style>
+  body { font-family: sans-serif; background: #f5f0eb; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+  .card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 420px; width: 100%; }
+  h2 { margin: 0 0 8px; color: #2c1810; }
+  p { color: #6b5744; font-size: 14px; margin: 0 0 24px; line-height: 1.5; }
+  label { display: block; font-size: 13px; color: #666; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; margin-bottom: 16px; box-sizing: border-box; }
+  button { width: 100%; padding: 14px; background: #c41e3a; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600; }
+  button:hover { background: #a01830; }
+  .result { margin-top: 20px; padding: 16px; border-radius: 6px; font-size: 13px; word-break: break-all; display: none; }
+  .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+  .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>Epos Now API Token</h2>
+  <p>Enter your Epos Now login credentials below. This runs locally and sends them directly to Epos Now's API to get an API token.</p>
+  <label>Email</label>
+  <input type="email" id="email" placeholder="your@email.com">
+  <label>Password</label>
+  <input type="password" id="password" placeholder="Your Epos Now password">
+  <button onclick="getToken()">Get API Token</button>
+  <div id="result" class="result"></div>
+</div>
+<script>
+async function getToken() {
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('password').value;
+  const result = document.getElementById('result');
+  if (!email || !pass) { result.className = 'result error'; result.style.display = 'block'; result.textContent = 'Please enter both email and password.'; return; }
+  result.className = 'result'; result.style.display = 'block'; result.textContent = 'Requesting token...';
+  try {
+    const resp = await fetch('https://api.eposnowhq.com/api/v4/Token', {
+      method: 'GET',
+      headers: { 'Authorization': 'Basic ' + btoa(email + ':' + pass) }
+    });
+    const text = await resp.text();
+    if (resp.ok) {
+      result.className = 'result success';
+      result.innerHTML = '<strong>Your API Token (copy this):</strong><br><br>' + text;
+    } else {
+      result.className = 'result error'; result.textContent = 'Error ' + resp.status + ': ' + text;
+    }
+  } catch(e) {
+    result.className = 'result error'; result.textContent = 'Request failed: ' + e.message;
+  }
+}
+</script>
+</div>
+</body>
+</html>
