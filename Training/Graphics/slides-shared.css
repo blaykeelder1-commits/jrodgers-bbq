@@ -1,0 +1,347 @@
+/* J Rodgers BBQ & Soul Food — Training Video Graphics
+   Shared styles for all video slide decks
+   Each slide is 1920x1080 (16:9 HD video frame) */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Raleway:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 40px;
+  font-family: 'Raleway', sans-serif;
+}
+
+.slide-label {
+  color: #999;
+  font-size: 14px;
+  font-family: monospace;
+  margin-bottom: -30px;
+  align-self: flex-start;
+  margin-left: calc(50% - 960px);
+}
+
+.slide {
+  width: 1920px;
+  height: 1080px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* ── Color Palette ── */
+:root {
+  --brand-red: #8B1A1A;
+  --brand-red-dark: #5C1111;
+  --brand-red-light: #A82525;
+  --brand-gold: #D4A843;
+  --brand-gold-light: #E8C96A;
+  --brand-cream: #FFF8EE;
+  --brand-charcoal: #2D2218;
+  --brand-warm-gray: #3D3028;
+}
+
+/* ── Background Variants ── */
+.bg-red {
+  background: linear-gradient(135deg, var(--brand-red-dark) 0%, var(--brand-red) 50%, var(--brand-red-light) 100%);
+}
+.bg-dark {
+  background: linear-gradient(135deg, #1a0f0a 0%, var(--brand-charcoal) 50%, var(--brand-warm-gray) 100%);
+}
+.bg-cream {
+  background: linear-gradient(135deg, #fff 0%, var(--brand-cream) 100%);
+}
+.bg-gold-accent {
+  background: linear-gradient(135deg, var(--brand-red-dark) 0%, var(--brand-red) 100%);
+}
+
+/* ── Decorative Elements ── */
+.slide::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+}
+
+.bg-red::before,
+.bg-dark::before,
+.bg-gold-accent::before {
+  background:
+    radial-gradient(ellipse at 10% 90%, rgba(212,168,67,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 10%, rgba(212,168,67,0.06) 0%, transparent 50%);
+}
+
+/* Gold corner accents */
+.corner-accents::after {
+  content: '';
+  position: absolute;
+  top: 40px; left: 40px; right: 40px; bottom: 40px;
+  border: 2px solid rgba(212,168,67,0.25);
+  pointer-events: none;
+}
+
+/* Gold line divider */
+.gold-line {
+  width: 120px;
+  height: 3px;
+  background: var(--brand-gold);
+  margin: 24px auto;
+}
+.gold-line-wide {
+  width: 200px;
+  height: 3px;
+  background: var(--brand-gold);
+  margin: 24px auto;
+}
+.gold-line-left {
+  width: 120px;
+  height: 3px;
+  background: var(--brand-gold);
+  margin: 24px 0;
+}
+
+/* ── Typography ── */
+.title-main {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 96px;
+  letter-spacing: 6px;
+  line-height: 1.05;
+  color: #fff;
+  text-align: center;
+}
+.title-large {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 120px;
+  letter-spacing: 8px;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+}
+.subtitle {
+  font-family: 'Raleway', sans-serif;
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+  text-align: center;
+}
+.subtitle-white {
+  font-family: 'Raleway', sans-serif;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+  text-align: center;
+}
+.tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 42px;
+  color: var(--brand-gold);
+  text-align: center;
+}
+.section-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 180px;
+  color: rgba(212,168,67,0.15);
+  position: absolute;
+  line-height: 1;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 100px;
+  letter-spacing: 4px;
+  color: #fff;
+  text-align: center;
+}
+.section-subtitle {
+  font-family: 'Raleway', sans-serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.policy-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 72px;
+  letter-spacing: 3px;
+  color: #fff;
+}
+.policy-body {
+  font-family: 'Raleway', sans-serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.6;
+}
+.quote-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 52px;
+  color: #fff;
+  text-align: center;
+  line-height: 1.4;
+  max-width: 1400px;
+}
+.quote-attr {
+  font-family: 'Raleway', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--brand-gold);
+  text-align: center;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+.remember-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 6px;
+  color: var(--brand-gold);
+  text-transform: uppercase;
+}
+.remember-text {
+  font-family: 'Raleway', sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.5;
+  text-align: center;
+  max-width: 1300px;
+}
+.standard-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 200px;
+  color: var(--brand-gold);
+  line-height: 1;
+}
+.standard-text {
+  font-family: 'Raleway', sans-serif;
+  font-size: 48px;
+  font-weight: 600;
+  color: #fff;
+}
+.temp-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 72px;
+  color: var(--brand-gold);
+}
+.temp-label {
+  font-family: 'Raleway', sans-serif;
+  font-size: 28px;
+  color: rgba(255,255,255,0.9);
+}
+
+/* ── Layout Helpers ── */
+.slide-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 120px;
+}
+.slide-content-left {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 120px;
+}
+
+/* ── Pillar Card ── */
+.pillar-icon {
+  width: 100px;
+  height: 100px;
+  border: 3px solid var(--brand-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.pillar-icon span {
+  font-size: 48px;
+}
+
+/* ── Policy Badge ── */
+.policy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(212,168,67,0.15);
+  border: 1px solid var(--brand-gold);
+  border-radius: 8px;
+  padding: 12px 28px;
+  margin-bottom: 30px;
+}
+.policy-badge span {
+  font-family: 'Raleway', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+}
+
+/* ── Bottom Bar ── */
+.bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--brand-gold);
+}
+.bottom-bar-thick {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: rgba(212,168,67,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bottom-bar-thick span {
+  font-family: 'Raleway', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+  opacity: 0.7;
+}
+
+/* ── Video badge ── */
+.video-badge {
+  position: absolute;
+  top: 50px;
+  right: 60px;
+  background: rgba(212,168,67,0.15);
+  border: 1px solid rgba(212,168,67,0.4);
+  border-radius: 6px;
+  padding: 8px 20px;
+}
+.video-badge span {
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--brand-gold);
+}
